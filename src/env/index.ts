@@ -1,7 +1,7 @@
 export type AppEnvName = 'development' | 'production' | 'preview'
 
 function getEnvName(): AppEnvName {
-  const value = process.env["APP_ENV"] ?? process.env["NEXT_PUBLIC_APP_ENV"] ?? 'development'
+  const value = process.env['APP_ENV'] ?? process.env['NEXT_PUBLIC_APP_ENV'] ?? 'development'
 
   if (value === 'dev') {
     return 'development'

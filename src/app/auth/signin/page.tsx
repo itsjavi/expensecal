@@ -1,12 +1,12 @@
-import { SignInButton } from "@/components/SignInButton"
-import { auth, providers } from "@/lib/auth"
-import { redirect } from "next/navigation"
+import { SignInButton } from '@/components/SignInButton'
+import { auth, providers } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export default async function SignIn() {
   const session = await auth()
 
   if (session) {
-    redirect("/dashboard")
+    redirect('/dashboard')
   }
 
   return (

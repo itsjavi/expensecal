@@ -2,10 +2,10 @@
 
 import { deleteSubscription, updateSubscription } from '@/app/actions/subscriptions'
 import type { Subscription } from '@/models/schema'
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
-export default function SubscriptionList({ subscriptions }: { subscriptions: Subscription[], currency: string }) {
+export default function SubscriptionList({ subscriptions }: { subscriptions: Subscription[]; currency: string }) {
   const [editingId, setEditingId] = useState<number | null>(null)
 
   const handleEdit = (id: number) => {
@@ -21,7 +21,10 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
       cost: parseFloat(formData.get('cost') as string),
       dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
       recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
-      customRecurringMonths: formData.get('recurringType') === 'custom' ? parseInt(formData.get('customRecurringMonths') as string) : undefined,
+      customRecurringMonths:
+        formData.get('recurringType') === 'custom'
+          ? parseInt(formData.get('customRecurringMonths') as string)
+          : undefined,
     })
     setEditingId(null)
   }
@@ -51,9 +54,29 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
                   <form onSubmit={(e) => handleUpdate(e, sub.id)} className="space-y-2">
                     <input name="title" defaultValue={sub.title} className="input input-bordered w-full" required />
                     <input name="logo" defaultValue={sub.logo || ''} className="input input-bordered w-full" required />
-                    <input name="cost" type="number" step="0.01" defaultValue={sub.cost / 100} className="input input-bordered w-full" required />
-                    <input name="dayOfMonth" type="number" min="1" max="31" defaultValue={sub.dayOfMonth} className="input input-bordered w-full" required />
-                    <select name="recurringType" defaultValue={sub.recurringType} className="select select-bordered w-full" required>
+                    <input
+                      name="cost"
+                      type="number"
+                      step="0.01"
+                      defaultValue={sub.cost / 100}
+                      className="input input-bordered w-full"
+                      required
+                    />
+                    <input
+                      name="dayOfMonth"
+                      type="number"
+                      min="1"
+                      max="31"
+                      defaultValue={sub.dayOfMonth}
+                      className="input input-bordered w-full"
+                      required
+                    />
+                    <select
+                      name="recurringType"
+                      defaultValue={sub.recurringType}
+                      className="select select-bordered w-full"
+                      required
+                    >
                       <option value="weekly">Weekly</option>
                       <option value="fortnightly">Fortnightly</option>
                       <option value="monthly">Monthly</option>
@@ -61,11 +84,21 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
                       <option value="custom">Custom</option>
                     </select>
                     {sub.recurringType === 'custom' && (
-                      <input name="customRecurringMonths" type="number" defaultValue={sub.customRecurringMonths || 1} className="input input-bordered w-full" required />
+                      <input
+                        name="customRecurringMonths"
+                        type="number"
+                        defaultValue={sub.customRecurringMonths || 1}
+                        className="input input-bordered w-full"
+                        required
+                      />
                     )}
                     <div className="flex justify-end space-x-2">
-                      <button type="button" className="btn" onClick={() => setEditingId(null)}>Cancel</button>
-                      <button type="submit" className="btn btn-primary">Update</button>
+                      <button type="button" className="btn" onClick={() => setEditingId(null)}>
+                        Cancel
+                      </button>
+                      <button type="submit" className="btn btn-primary">
+                        Update
+                      </button>
                     </div>
                   </form>
                 </td>
@@ -75,7 +108,11 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
                     <div className="flex items-center space-x-3">
                       <div className="avatar">
                         <div className="mask mask-squircle w-12 h-12">
-                          {sub.logo ? <img src={sub.logo} alt={sub.title} /> : <div className="w-12 h-12 bg-base-300">{sub.title[0]}</div>}
+                          {sub.logo ? (
+                            <img src={sub.logo} alt={sub.title} />
+                          ) : (
+                            <div className="w-12 h-12 bg-base-300">{sub.title[0]}</div>
+                          )}
                         </div>
                       </div>
                       <div>
@@ -84,7 +121,10 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
                     </div>
                   </td>
                   <td>${(sub.cost / 100).toFixed(2)}</td>
-                  <td>{sub.recurringType}{sub.recurringType === 'custom' ? ` (${sub.customRecurringMonths} months)` : ''}</td>
+                  <td>
+                    {sub.recurringType}
+                    {sub.recurringType === 'custom' ? ` (${sub.customRecurringMonths} months)` : ''}
+                  </td>
                   <td>
                     <button className="btn btn-ghost btn-xs" onClick={() => handleEdit(sub.id)}>
                       <PencilIcon className="h-4 w-4" />

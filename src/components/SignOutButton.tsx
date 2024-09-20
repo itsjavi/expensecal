@@ -1,10 +1,10 @@
-import { signOut } from "@/lib/auth"
+import { signOut } from '@/lib/auth'
 
 export function SignOutButton() {
   return (
     <form
       action={async () => {
-        "use server"
+        'use server'
         await signOut()
       }}
     >

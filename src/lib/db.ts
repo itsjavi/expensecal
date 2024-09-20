@@ -9,7 +9,6 @@ import * as schema from '@/models/schema'
 import { type Column, sql } from 'drizzle-orm'
 import { singleton } from './utils'
 
-
 function createPostgresConnection() {
   return postgres(envVars.DATABASE_URL, { max: 100 })
 }
@@ -24,10 +23,13 @@ function createNeonPooledConnection() {
 
 export function createDrizzlePostgresClient(): [postgres.Sql<{}>, ReturnType<typeof drizzlePostgresDriver>] {
   const conn = createPostgresConnection()
-  return [conn, drizzlePostgresDriver(conn, {
-    schema,
-    // , logger: true
-  })]
+  return [
+    conn,
+    drizzlePostgresDriver(conn, {
+      schema,
+      // , logger: true
+    }),
+  ]
 }
 
 export function createDrizzleNeonPooledClient(): [Pool, ReturnType<typeof drizzleNeonDriver>] {

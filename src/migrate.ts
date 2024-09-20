@@ -1,12 +1,12 @@
-import "@/env/load"
+import '@/env/load'
 
-import { createDrizzlePostgresClient } from "@/lib/db"
+import { createDrizzlePostgresClient } from '@/lib/db'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 
 const [connection, db] = createDrizzlePostgresClient()
 
 // This will run migrations on the database, skipping the ones already applied
-await migrate(db, { migrationsFolder: "./drizzle" })
+await migrate(db, { migrationsFolder: './drizzle' })
 
 // Don't forget to close the connection, otherwise the script will hang
 await connection.end()

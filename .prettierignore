@@ -1,0 +1,27 @@
+# Ignore:
+build
+.next
+.turbo
+.astro
+data
+node_modules
+.yarn/
+.cache/
+coverage/
+pnpm-*.yaml
+.history/
+v8-compile-cache-*
+.pnpm-store
+.vercel/
+.ignore/
+generated/
+.generated/
+styled-system/
+
+.local/
+public/
+
+drizzle/
+migrations/
+.vscode/
+turbo.json

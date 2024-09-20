@@ -59,15 +59,15 @@ export type NullableFormSchema<T> = {
 
 export type FormState<TData extends Record<string, unknown> = Record<string, unknown>> =
   | {
-    status: 'ok'
-    data: TData
-    errors?: never
-  }
+      status: 'ok'
+      data: TData
+      errors?: never
+    }
   | {
-    status: 'error'
-    data?: never
-    errors: Record<string, string[] | undefined>
-  }
+      status: 'error'
+      data?: never
+      errors: Record<string, string[] | undefined>
+    }
   | undefined
 
 export interface Cookie {

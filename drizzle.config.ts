@@ -1,4 +1,4 @@
-import "@/env/load"
+import '@/env/load'
 
 import { defineConfig } from 'drizzle-kit'
 

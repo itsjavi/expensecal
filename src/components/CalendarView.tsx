@@ -1,8 +1,20 @@
-import { type Subscription } from "@/models/schema"
+import { type Subscription } from '@/models/schema'
 
-export default async function CalendarView({ subscriptions }: { subscriptions: Subscription[], currency: string }) {
-
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+export default async function CalendarView({ subscriptions }: { subscriptions: Subscription[]; currency: string }) {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -11,7 +23,7 @@ export default async function CalendarView({ subscriptions }: { subscriptions: S
           <h3 className="text-lg font-semibold mb-2">{month}</h3>
           <ul className="space-y-2">
             {subscriptions
-              .filter(sub => {
+              .filter((sub) => {
                 const date = new Date()
                 date.setMonth(index)
                 date.setDate(sub.dayOfMonth)
@@ -22,13 +34,12 @@ export default async function CalendarView({ subscriptions }: { subscriptions: S
                   (sub.recurringType === 'custom' && index % (sub.customRecurringMonths || 1) === 0)
                 )
               })
-              .map(sub => (
+              .map((sub) => (
                 <li key={sub.id} className="flex justify-between items-center">
                   <span>{sub.title}</span>
                   <span>${(sub.cost / 100).toFixed(2)}</span>
                 </li>
-              ))
-            }
+              ))}
           </ul>
         </div>
       ))}

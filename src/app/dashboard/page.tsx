@@ -1,15 +1,15 @@
-import { getSubscriptions } from "@/app/actions/subscriptions"
-import CalendarView from "@/components/CalendarView"
-import SubscriptionForm from "@/components/SubscriptionForm"
-import SubscriptionList from "@/components/SubscriptionList"
-import { auth } from "@/lib/auth"
-import { redirect } from "next/navigation"
+import { getSubscriptions } from '@/app/actions/subscriptions'
+import CalendarView from '@/components/CalendarView'
+import SubscriptionForm from '@/components/SubscriptionForm'
+import SubscriptionList from '@/components/SubscriptionList'
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
   const session = await auth()
 
   if (!session) {
-    redirect("/auth/signin")
+    redirect('/auth/signin')
   }
 
   const subscriptions = await getSubscriptions(session.user.id)

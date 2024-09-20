@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { deleteUser, updateUserSettings } from '@/app/actions/user';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { deleteUser, updateUserSettings } from '@/app/actions/user'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 export default function SettingsPage() {
-  const { data: session, update } = useSession();
-  const [currency, setCurrency] = useState(session?.user?.currency || 'USD');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { data: session, update } = useSession()
+  const [currency, setCurrency] = useState(session?.user?.currency || 'USD')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const handleCurrencyChange = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await updateUserSettings({ currency });
-    update(); // Update the session to reflect the new currency
-  };
+    e.preventDefault()
+    await updateUserSettings({ currency })
+    update() // Update the session to reflect the new currency
+  }
 
   const handleDeleteAccount = async () => {
-    await deleteUser();
+    await deleteUser()
     // Redirect to home page or sign out
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">User Settings</h1>
-      
+
       <form onSubmit={handleCurrencyChange} className="mb-8">
         <div className="form-control">
           <label className="label">
@@ -37,7 +37,9 @@ export default function SettingsPage() {
             placeholder="Enter currency code (e.g., USD, EUR, GBP)"
           />
         </div>
-        <button type="submit" className="btn btn-primary mt-4">Save Currency</button>
+        <button type="submit" className="btn btn-primary mt-4">
+          Save Currency
+        </button>
       </form>
 
       <div>
@@ -52,12 +54,16 @@ export default function SettingsPage() {
             <h3 className="font-bold text-lg">Confirm Account Deletion</h3>
             <p className="py-4">Are you sure you want to delete your account? This action cannot be undone.</p>
             <div className="modal-action">
-              <button onClick={() => setIsDeleteModalOpen(false)} className="btn">Cancel</button>
-              <button onClick={handleDeleteAccount} className="btn btn-error">Delete</button>
+              <button onClick={() => setIsDeleteModalOpen(false)} className="btn">
+                Cancel
+              </button>
+              <button onClick={handleDeleteAccount} className="btn btn-error">
+                Delete
+              </button>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -15,14 +15,19 @@ export default function SubscriptionForm() {
       cost: parseFloat(formData.get('cost') as string),
       dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
       recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
-      customRecurringMonths: formData.get('recurringType') === 'custom' ? parseInt(formData.get('customRecurringMonths') as string) : undefined,
+      customRecurringMonths:
+        formData.get('recurringType') === 'custom'
+          ? parseInt(formData.get('customRecurringMonths') as string)
+          : undefined,
     })
     setIsOpen(false)
   }
 
   return (
     <div>
-      <button className="btn btn-primary mt-4" onClick={() => setIsOpen(true)}>Add Subscription</button>
+      <button className="btn btn-primary mt-4" onClick={() => setIsOpen(true)}>
+        Add Subscription
+      </button>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-base-100 p-6 rounded-lg w-full max-w-md">
@@ -44,13 +49,28 @@ export default function SubscriptionForm() {
                 <label className="label" htmlFor="cost">
                   <span className="label-text">Cost</span>
                 </label>
-                <input type="number" id="cost" name="cost" step="0.01" className="input input-bordered w-full" required />
+                <input
+                  type="number"
+                  id="cost"
+                  name="cost"
+                  step="0.01"
+                  className="input input-bordered w-full"
+                  required
+                />
               </div>
               <div>
                 <label className="label" htmlFor="dayOfMonth">
                   <span className="label-text">Day of Month</span>
                 </label>
-                <input type="number" id="dayOfMonth" name="dayOfMonth" min="1" max="31" className="input input-bordered w-full" required />
+                <input
+                  type="number"
+                  id="dayOfMonth"
+                  name="dayOfMonth"
+                  min="1"
+                  max="31"
+                  className="input input-bordered w-full"
+                  required
+                />
               </div>
               <div>
                 <label className="label" htmlFor="recurringType">
@@ -68,11 +88,20 @@ export default function SubscriptionForm() {
                 <label className="label" htmlFor="customRecurringMonths">
                   <span className="label-text">Custom Recurring Months</span>
                 </label>
-                <input type="number" id="customRecurringMonths" name="customRecurringMonths" className="input input-bordered w-full" />
+                <input
+                  type="number"
+                  id="customRecurringMonths"
+                  name="customRecurringMonths"
+                  className="input input-bordered w-full"
+                />
               </div>
               <div className="flex justify-end space-x-2">
-                <button type="button" className="btn" onClick={() => setIsOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Add</button>
+                <button type="button" className="btn" onClick={() => setIsOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Add
+                </button>
               </div>
             </form>
           </div>
