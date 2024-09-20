@@ -3,8 +3,24 @@
 import { addSubscription } from '@/app/actions/subscriptions'
 import { useState } from 'react'
 
-export default function SubscriptionForm() {
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+export default function SubscriptionForm({ currency }: { currency: string }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [recurringType, setRecurringType] = useState<string>('monthly')
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -15,6 +31,7 @@ export default function SubscriptionForm() {
       cost: parseFloat(formData.get('cost') as string),
       dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
       recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
+      startingMonth: parseInt(formData.get('startingMonth') as string),
       customRecurringMonths:
         formData.get('recurringType') === 'custom'
           ? parseInt(formData.get('customRecurringMonths') as string)
@@ -47,7 +64,7 @@ export default function SubscriptionForm() {
               </div>
               <div>
                 <label className="label" htmlFor="cost">
-                  <span className="label-text">Cost</span>
+                  <span className="label-text">Cost ({currency})</span>
                 </label>
                 <input
                   type="number"
@@ -76,7 +93,14 @@ export default function SubscriptionForm() {
                 <label className="label" htmlFor="recurringType">
                   <span className="label-text">Recurring Type</span>
                 </label>
-                <select id="recurringType" name="recurringType" className="select select-bordered w-full" required>
+                <select
+                  id="recurringType"
+                  name="recurringType"
+                  className="select select-bordered w-full"
+                  required
+                  value={recurringType}
+                  onChange={(e) => setRecurringType(e.target.value)}
+                >
                   <option value="monthly">Monthly</option>
                   <option value="weekly">Weekly</option>
                   <option value="fortnightly">Fortnightly</option>
@@ -84,16 +108,32 @@ export default function SubscriptionForm() {
                   <option value="custom">Custom</option>
                 </select>
               </div>
+              {recurringType === 'custom' && (
+                <div>
+                  <label className="label" htmlFor="customRecurringMonths">
+                    <span className="label-text">Custom Recurring Months</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="customRecurringMonths"
+                    name="customRecurringMonths"
+                    className="input input-bordered w-full"
+                    required
+                    min="1"
+                  />
+                </div>
+              )}
               <div>
-                <label className="label" htmlFor="customRecurringMonths">
-                  <span className="label-text">Custom Recurring Months</span>
+                <label className="label" htmlFor="startingMonth">
+                  <span className="label-text">Starting Month</span>
                 </label>
-                <input
-                  type="number"
-                  id="customRecurringMonths"
-                  name="customRecurringMonths"
-                  className="input input-bordered w-full"
-                />
+                <select id="startingMonth" name="startingMonth" className="select select-bordered w-full" required>
+                  {months.map((month, index) => (
+                    <option key={index} value={index}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex justify-end space-x-2">
                 <button type="button" className="btn" onClick={() => setIsOpen(false)}>

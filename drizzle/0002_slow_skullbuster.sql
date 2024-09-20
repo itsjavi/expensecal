@@ -1,0 +1,1 @@
+ALTER TABLE "subscription" ADD COLUMN "starting_month" integer DEFAULT 0 NOT NULL;

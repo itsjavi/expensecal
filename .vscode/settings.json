@@ -1,0 +1,14 @@
+{
+  "prettier.enable": true,
+  "prettier.proseWrap": "always",
+  "prettier.configPath": ".prettierrc",
+  "prettier.documentSelectors": [
+    "**/*.md",
+    "**/*.mdx"
+  ],
+  "editor.defaultFormatter": null,
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

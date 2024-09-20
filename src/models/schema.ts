@@ -100,6 +100,7 @@ export const subscriptions = pgTable('subscription', {
   dayOfMonth: integer('day_of_month').default(1).notNull(),
   recurringType: recurringTypeEnum('recurring_type').default('monthly').notNull(),
   customRecurringMonths: integer('custom_recurring_months'),
+  startingMonth: integer('starting_month').default(0).notNull(), // 0 for January, 11 for December
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })

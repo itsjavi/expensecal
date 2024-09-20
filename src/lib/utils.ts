@@ -31,3 +31,10 @@ export function singleton<Value>(name: string, valueFactory: () => Value): Value
   yolo.__singletons[name] ??= valueFactory()
   return yolo.__singletons[name] as Value
 }
+
+export function formatCurrency(amount: number, currency: string): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount / 100) // Assuming the amount is stored in cents
+}

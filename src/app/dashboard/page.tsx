@@ -17,14 +17,14 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col space-y-8">
       <h1 className="text-3xl font-bold">Dashboard</h1>
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/2">
-          <h2 className="text-2xl font-semibold mb-4">Your Subscriptions</h2>
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="w-full lg:w-1/2">
+          <h2 className="text-2xl font-semibold mb-4">Your Expenses</h2>
           <SubscriptionList subscriptions={subscriptions} currency={session.user.currency} />
-          <SubscriptionForm />
+          <SubscriptionForm currency={session.user.currency} />
         </div>
-        <div className="w-full md:w-1/2">
-          <h2 className="text-2xl font-semibold mb-4">Calendar View</h2>
+        <div className="w-full lg:w-1/2">
+          <h2 className="text-2xl font-semibold mb-4">Yearly Overview</h2>
           <CalendarView subscriptions={subscriptions} currency={session.user.currency} />
         </div>
       </div>

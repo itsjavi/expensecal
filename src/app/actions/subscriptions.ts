@@ -13,6 +13,7 @@ export async function addSubscription(data: {
   dayOfMonth: number
   recurringType: 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom'
   customRecurringMonths?: number
+  startingMonth: number
 }) {
   const session = await auth()
   if (!session?.user?.id) throw new Error('Not authenticated')
@@ -34,6 +35,7 @@ export async function updateSubscription(
     dayOfMonth: number
     recurringType: 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom'
     customRecurringMonths?: number
+    startingMonth: number
   }>,
 ) {
   const session = await auth()

@@ -1,16 +1,36 @@
 'use client'
 
 import { deleteSubscription, updateSubscription } from '@/app/actions/subscriptions'
+import { formatCurrency } from '@/lib/utils'
 import type { Subscription } from '@/models/schema'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
-export default function SubscriptionList({ subscriptions }: { subscriptions: Subscription[]; currency: string }) {
-  const [editingId, setEditingId] = useState<number | null>(null)
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
 
-  const handleEdit = (id: number) => {
-    setEditingId(id)
-  }
+export default function SubscriptionList({
+  subscriptions,
+  currency,
+}: {
+  subscriptions: Subscription[]
+  currency: string
+}) {
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingRecurringType, setEditingRecurringType] = useState<string>('monthly')
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>, id: number) => {
     event.preventDefault()
@@ -25,120 +45,161 @@ export default function SubscriptionList({ subscriptions }: { subscriptions: Sub
         formData.get('recurringType') === 'custom'
           ? parseInt(formData.get('customRecurringMonths') as string)
           : undefined,
+      startingMonth: parseInt(formData.get('startingMonth') as string),
     })
     setEditingId(null)
   }
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this subscription?')) {
-      await deleteSubscription(id)
-    }
+    await deleteSubscription(id)
+    setDeletingId(null)
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Cost</th>
-            <th>Recurring</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {subscriptions.map((sub) => (
-            <tr key={sub.id}>
-              {editingId === sub.id ? (
-                <td colSpan={4}>
-                  <form onSubmit={(e) => handleUpdate(e, sub.id)} className="space-y-2">
-                    <input name="title" defaultValue={sub.title} className="input input-bordered w-full" required />
-                    <input name="logo" defaultValue={sub.logo || ''} className="input input-bordered w-full" required />
-                    <input
-                      name="cost"
-                      type="number"
-                      step="0.01"
-                      defaultValue={sub.cost / 100}
-                      className="input input-bordered w-full"
-                      required
-                    />
-                    <input
-                      name="dayOfMonth"
-                      type="number"
-                      min="1"
-                      max="31"
-                      defaultValue={sub.dayOfMonth}
-                      className="input input-bordered w-full"
-                      required
-                    />
-                    <select
-                      name="recurringType"
-                      defaultValue={sub.recurringType}
-                      className="select select-bordered w-full"
-                      required
-                    >
-                      <option value="weekly">Weekly</option>
-                      <option value="fortnightly">Fortnightly</option>
-                      <option value="monthly">Monthly</option>
-                      <option value="yearly">Yearly</option>
-                      <option value="custom">Custom</option>
-                    </select>
-                    {sub.recurringType === 'custom' && (
-                      <input
-                        name="customRecurringMonths"
-                        type="number"
-                        defaultValue={sub.customRecurringMonths || 1}
-                        className="input input-bordered w-full"
-                        required
-                      />
-                    )}
-                    <div className="flex justify-end space-x-2">
-                      <button type="button" className="btn" onClick={() => setEditingId(null)}>
-                        Cancel
-                      </button>
-                      <button type="submit" className="btn btn-primary">
-                        Update
-                      </button>
-                    </div>
-                  </form>
-                </td>
-              ) : (
+      <div className="hidden md:grid grid-cols-5 gap-4 font-bold mb-2 p-4">
+        <div>Title</div>
+        <div>Cost</div>
+        <div>Recurring</div>
+        <div>Day of Month</div>
+        <div>Actions</div>
+      </div>
+      {subscriptions.map((sub) => (
+        <div key={sub.id} className="bg-base-200 p-4 rounded-lg mb-2">
+          {editingId === sub.id ? (
+            <form onSubmit={(e) => handleUpdate(e, sub.id)} className="space-y-2">
+              <label className="label">
+                <span className="label-text">Title</span>
+              </label>
+              <input name="title" defaultValue={sub.title} className="input input-bordered w-full" required />
+
+              <label className="label">
+                <span className="label-text">Cost ({currency})</span>
+              </label>
+              <input
+                name="cost"
+                type="number"
+                step="0.01"
+                defaultValue={sub.cost / 100}
+                className="input input-bordered w-full"
+                required
+              />
+
+              <label className="label">
+                <span className="label-text">Recurring Type</span>
+              </label>
+              <select
+                name="recurringType"
+                defaultValue={sub.recurringType}
+                className="select select-bordered w-full"
+                required
+                onChange={(e) => setEditingRecurringType(e.target.value)}
+              >
+                <option value="weekly">Weekly</option>
+                <option value="fortnightly">Fortnightly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="custom">Custom</option>
+              </select>
+
+              {editingRecurringType === 'custom' && (
                 <>
-                  <td>
-                    <div className="flex items-center space-x-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          {sub.logo ? (
-                            <img src={sub.logo} alt={sub.title} />
-                          ) : (
-                            <div className="w-12 h-12 bg-base-300">{sub.title[0]}</div>
-                          )}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="font-bold">{sub.title}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>${(sub.cost / 100).toFixed(2)}</td>
-                  <td>
-                    {sub.recurringType}
-                    {sub.recurringType === 'custom' ? ` (${sub.customRecurringMonths} months)` : ''}
-                  </td>
-                  <td>
-                    <button className="btn btn-ghost btn-xs" onClick={() => handleEdit(sub.id)}>
-                      <PencilIcon className="h-4 w-4" />
-                    </button>
-                    <button className="btn btn-ghost btn-xs" onClick={() => handleDelete(sub.id)}>
-                      <TrashIcon className="h-4 w-4" />
-                    </button>
-                  </td>
+                  <label className="label">
+                    <span className="label-text">Custom Recurring Months</span>
+                  </label>
+                  <input
+                    name="customRecurringMonths"
+                    type="number"
+                    defaultValue={sub.customRecurringMonths || 1}
+                    className="input input-bordered w-full"
+                    required
+                    min="1"
+                  />
                 </>
               )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+              <label className="label">
+                <span className="label-text">Day of Month</span>
+              </label>
+              <input
+                name="dayOfMonth"
+                type="number"
+                min="1"
+                max="31"
+                defaultValue={sub.dayOfMonth}
+                className="input input-bordered w-full"
+                required
+              />
+
+              <label className="label">
+                <span className="label-text">Starting Month</span>
+              </label>
+              <select
+                name="startingMonth"
+                defaultValue={sub.startingMonth}
+                className="select select-bordered w-full"
+                required
+              >
+                {months.map((month, index) => (
+                  <option key={index} value={index}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+
+              <div className="flex justify-end space-x-2">
+                <button type="button" className="btn btn-sm" onClick={() => setEditingId(null)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-sm btn-primary">
+                  Update
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="md:grid md:grid-cols-5 md:gap-4 md:items-center space-y-2 md:space-y-0">
+              <div className="font-bold md:font-normal">{sub.title}</div>
+              <div>{formatCurrency(sub.cost, currency)}</div>
+              <div>
+                {sub.recurringType === 'custom' ? `every ${sub.customRecurringMonths} months` : sub.recurringType}
+              </div>
+              <div>{sub.dayOfMonth}</div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  className="btn btn-sm btn-ghost"
+                  onClick={() => {
+                    setEditingId(sub.id)
+                    setEditingRecurringType(sub.recurringType)
+                  }}
+                >
+                  <PencilIcon className="h-5 w-5" />
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setDeletingId(sub.id)}>
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Confirmation Modal */}
+      {deletingId && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Confirm Deletion</h3>
+            <p className="py-4">Are you sure you want to delete this subscription?</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setDeletingId(null)}>
+                Cancel
+              </button>
+              <button className="btn btn-error" onClick={() => handleDelete(deletingId)}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

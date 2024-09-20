@@ -7,8 +7,9 @@ export default async function BaseLayout({ children }: { children: React.ReactNo
     <>
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <Link href="/" className="btn btn-ghost normal-case text-xl">
-            Subscription Tracker
+          <Link href="/" className="btn btn-ghost normal-case text-xl tracking-tighter">
+            <span className="mr-2">🗓️</span>
+            Expenses Calendar
           </Link>
         </div>
         <div className="flex-none">
@@ -35,8 +36,8 @@ export default async function BaseLayout({ children }: { children: React.ReactNo
               </ul>
             </div>
           ) : (
-            <Link href="/api/auth/signin" className="btn btn-primary">
-              Login
+            <Link href="/api/auth/signin" className="btn btn-neutral btn-sm btn-outline">
+              Sign In
             </Link>
           )}
         </div>
