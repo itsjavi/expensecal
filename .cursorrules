@@ -1,0 +1,20 @@
+This project is a Next.js app that allows you to calculate how much do you spend on subscriptions every month.
+It's an overview of your yearly expenses, to see where your money goes. 
+
+Technically, it follows these rules:
+
+- Next.js 14 App Router + src folder
+- Daisy UI for the UI
+- Tailwind CSS for any other styling not covered by Daisy UI
+- Drizzle ORM for the database (PostgreSQL)
+- NextAuth for the authentication (using Auth.js and Next Auth v5 beta)
+- Users are logged in via oauth. For now we only allow Github.
+- Schemas live under src/models/schema.ts
+- Use server actions over API routes/calls.
+
+The app features the following:
+
+- A sleek, minimalistic, responsive modern design. Default theme is dark.
+- A calendar view of your expenses for the current month or year (can be changed)
+- A form to add/edit/delete services (expenses)
+- A dashboard that lists your services (expenses), shows the calendar view(s), and charts in the future

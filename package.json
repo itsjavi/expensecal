@@ -3,22 +3,45 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build:prod": "pnpm build && pnpm db:migrate",
+    "db:diff": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "dev": "PORT=5091 next dev",
+    "lint": "next lint",
+    "prepare": "sort-package-json",
+    "start": "PORT=5091 next start",
+    "test": "bun test ./src/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.13"
+    "@auth/drizzle-adapter": "^1.5.0",
+    "@heroicons/react": "^2.1.5",
+    "@neondatabase/serverless": "^0.9.5",
+    "@tailwindcss/typography": "^0.5.15",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
+    "next": "14.2.13",
+    "next-auth": "5.0.0-beta.21",
+    "postgres": "^3.4.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "@types/bun": "^1.1.9",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.5.5",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "daisyui": "^4.12.10",
+    "drizzle-kit": "^0.24.2",
+    "postcss": "^8.4.47",
+    "sort-package-json": "^2.10.1",
+    "tailwindcss": "^3.4.12",
+    "typescript": "^5.6.2"
   }
 }
