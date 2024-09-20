@@ -3,13 +3,13 @@
 import { addSubscription } from '@/app/actions/subscriptions'
 import { useState } from 'react'
 
-export default function SubscriptionForm({ userId }: { userId: string }) {
+export default function SubscriptionForm() {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    await addSubscription(userId, {
+    await addSubscription({
       title: formData.get('title') as string,
       logo: formData.get('logo') as string,
       cost: parseFloat(formData.get('cost') as string),

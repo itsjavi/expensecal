@@ -1,6 +1,6 @@
 import { type Subscription } from "@/models/schema"
 
-export default async function CalendarView({ subscriptions }: { subscriptions: Subscription[] }) {
+export default async function CalendarView({ subscriptions }: { subscriptions: Subscription[], currency: string }) {
 
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 

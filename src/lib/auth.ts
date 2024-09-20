@@ -1,19 +1,27 @@
 import { accounts, authenticators, sessions, users, verificationTokens } from "@/models/schema";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
+import NextAuth, {type DefaultSession} from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { db } from "./db";
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
-    user: {
+    user: DefaultSession['user'] & {
       id: string;
       name?: string | null;
       email?: string | null;
       image?: string | null;
-    }
+      currency: string;
+      // ... other user properties
+    };
+  }
+
+  interface User {
+    currency: string;
+    // ... other user properties
   }
 }
+
 
 // export const authOptions: NextAuthOptions = {
 //   session: {
@@ -63,6 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.currency = user.currency;
       }
       return session;
     },

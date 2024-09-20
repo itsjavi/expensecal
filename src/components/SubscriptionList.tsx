@@ -5,7 +5,7 @@ import type { Subscription } from '@/models/schema'
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { useState } from 'react'
 
-export default function SubscriptionList({ subscriptions }: { subscriptions: Subscription[] }) {
+export default function SubscriptionList({ subscriptions }: { subscriptions: Subscription[], currency: string }) {
   const [editingId, setEditingId] = useState<number | null>(null)
 
   const handleEdit = (id: number) => {

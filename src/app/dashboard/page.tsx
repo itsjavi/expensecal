@@ -1,4 +1,3 @@
-
 import { getSubscriptions } from "@/app/actions/subscriptions"
 import CalendarView from "@/components/CalendarView"
 import SubscriptionForm from "@/components/SubscriptionForm"
@@ -21,12 +20,12 @@ export default async function DashboardPage() {
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Your Subscriptions</h2>
-          <SubscriptionList subscriptions={subscriptions} />
-          <SubscriptionForm userId={session.user.id} />
+          <SubscriptionList subscriptions={subscriptions} currency={session.user.currency} />
+          <SubscriptionForm />
         </div>
         <div className="w-full md:w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Calendar View</h2>
-          <CalendarView subscriptions={subscriptions} />
+          <CalendarView subscriptions={subscriptions} currency={session.user.currency} />
         </div>
       </div>
     </div>
