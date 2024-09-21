@@ -133,3 +133,21 @@ export const calculateCategorySums = (subscriptions: Subscription[], _year: numb
 
   return Object.entries(categorySums).map(([name, value]) => ({ name, value }))
 }
+
+export const calculateAverageMonthlyExpenses = (subscriptions: Subscription[], year: number) => {
+  const totalYearly = calculateYearlyTotal(subscriptions, year)
+  return totalYearly / 12
+}
+
+export const calculateCurrentMonthExpenses = (subscriptions: Subscription[], year: number, month: number) => {
+  return calculateMonthlyTotal(subscriptions, month, year)
+}
+
+export const calculateRemainingBudget = (monthlyBudget: number, currentMonthExpenses: number) => {
+  return monthlyBudget - currentMonthExpenses
+}
+
+export const calculatePotentialYearlySavings = (monthlyIncome: number, yearlyExpenses: number) => {
+  const yearlyIncome = monthlyIncome * 12
+  return yearlyIncome - yearlyExpenses
+}
