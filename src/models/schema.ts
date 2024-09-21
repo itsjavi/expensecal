@@ -111,7 +111,7 @@ export const expenseCategoryEnum = pgEnum('expense_category', expenseCategories)
 export const subscriptions = pgTable('subscription', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
   title: text('title').notNull(),
   logo: text('logo'),
