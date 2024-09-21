@@ -1,9 +1,10 @@
 import BaseLayout from '@/components/base-layout'
 import Providers from '@/components/providers'
 import { auth } from '@/lib/auth'
+import { Analytics } from '@vercel/analytics/react'
+import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import type { Metadata } from 'next'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.className}>
         <Providers session={session}>
           <BaseLayout session={session}>{children}</BaseLayout>
+          <Analytics />
         </Providers>
       </body>
     </html>
