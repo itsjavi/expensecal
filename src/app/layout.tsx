@@ -7,8 +7,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Subscription Tracker',
-  description: 'Track your monthly and yearly subscriptions',
+  title: 'ExpenseCal',
+  description: 'Track your monthly and yearly expenses and view them in a calendar',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

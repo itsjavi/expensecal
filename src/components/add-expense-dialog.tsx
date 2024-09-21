@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { capitalizeFirstLetter } from '@/lib/utils'
+import { expenseCategories } from '@/models/schema'
 import { useState } from 'react'
 
 type AddExpenseDialogProps = {
@@ -15,10 +17,10 @@ type AddExpenseDialogProps = {
 
 export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) {
   const [title, setTitle] = useState('')
-  const [cost, setCost] = useState('')
-  const [dayOfMonth, setDayOfMonth] = useState('')
+  const [cost, setCost] = useState('100')
+  const [dayOfMonth, setDayOfMonth] = useState('1')
   const [recurringType, setRecurringType] = useState('monthly')
-  const [category, setCategory] = useState('other')
+  const [category, setCategory] = useState('subscriptions')
   const [customRecurringMonths, setCustomRecurringMonths] = useState('')
   const [startingMonth, setStartingMonth] = useState('0')
 
@@ -37,9 +39,9 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     onOpenChange(false)
     // Reset form fields
     setTitle('')
-    setCost('')
-    setCategory('other')
-    setDayOfMonth('')
+    setCost('100')
+    setCategory('subscriptions')
+    setDayOfMonth('1')
     setRecurringType('monthly')
     setCustomRecurringMonths('')
     setStartingMonth('0')
@@ -63,16 +65,11 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="housing">Housing</SelectItem>
-                <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="food">Food</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="insurances">Insurances</SelectItem>
-                <SelectItem value="health">Health</SelectItem>
-                <SelectItem value="subscriptions">Subscriptions</SelectItem>
-                <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                <SelectItem value="investments">Investments</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {expenseCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {capitalizeFirstLetter(category)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -87,6 +84,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
               type="number"
               min="1"
               max="31"
+              defaultValue="1"
               value={dayOfMonth}
               onChange={(e) => setDayOfMonth(e.target.value)}
               required

@@ -73,7 +73,11 @@ export async function getSubscriptions() {
     return []
   }
 
-  return db.select().from(subscriptions).where(eq(subscriptions.userId, session.user.id))
+  return db
+    .select()
+    .from(subscriptions)
+    .where(eq(subscriptions.userId, session.user.id))
+    .orderBy(subscriptions.category, subscriptions.startingMonth, subscriptions.dayOfMonth)
 }
 
 export async function deleteSubscription(id: number) {

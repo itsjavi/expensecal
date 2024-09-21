@@ -14,7 +14,7 @@ export default function SignOutPage() {
             className="contents"
             action={async () => {
               'use server'
-              await signOut()
+              await signOut({ redirectTo: '/' })
             }}
           >
             <Button type="submit">Sign out</Button>

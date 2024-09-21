@@ -1,12 +1,24 @@
 'use client'
 
 import { deleteSubscription, updateSubscription } from '@/app/actions/subscriptions'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { type Subscription } from '@/models/schema'
+import { capitalizeFirstLetter } from '@/lib/utils'
+import { expenseCategories, type Subscription } from '@/models/schema'
 import { useEffect, useState } from 'react'
 
 type EditExpenseDialogProps = {
@@ -75,16 +87,11 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="housing">Housing</SelectItem>
-                <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="food">Food</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="insurances">Insurances</SelectItem>
-                <SelectItem value="health">Health</SelectItem>
-                <SelectItem value="subscriptions">Subscriptions</SelectItem>
-                <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                <SelectItem value="investments">Investments</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {expenseCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {capitalizeFirstLetter(category)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -147,9 +154,26 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
             </Select>
           </div>
           <DialogFooter>
-            <Button type="button" variant="destructive" onClick={handleDelete} className="mr-auto">
-              Delete
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button type="button" variant="destructive" className="mr-auto">
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the subscription and remove it from our
+                    servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Button type="submit">Save Changes</Button>
           </DialogFooter>
         </form>

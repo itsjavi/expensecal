@@ -87,8 +87,11 @@ export const authenticators = pgTable(
   }),
 )
 
-export const recurringTypeEnum = pgEnum('recurring_type', ['weekly', 'fortnightly', 'monthly', 'yearly', 'custom'])
-export const expenseCategoryEnum = pgEnum('expense_category', [
+export const recurringTypes = ['weekly', 'fortnightly', 'monthly', 'yearly', 'custom'] as const
+export type RecurringType = (typeof recurringTypes)[number]
+export const recurringTypeEnum = pgEnum('recurring_type', recurringTypes)
+
+export const expenseCategories = [
   'housing',
   'utilities',
   'food',
@@ -99,7 +102,9 @@ export const expenseCategoryEnum = pgEnum('expense_category', [
   'lifestyle',
   'investments',
   'other',
-])
+] as const
+export type ExpenseCategory = (typeof expenseCategories)[number]
+export const expenseCategoryEnum = pgEnum('expense_category', expenseCategories)
 
 export const subscriptions = pgTable('subscription', {
   id: serial('id').primaryKey(),
