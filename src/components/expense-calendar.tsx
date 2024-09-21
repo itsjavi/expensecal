@@ -16,6 +16,8 @@ import { cn, formatCurrency } from '@/lib/utils'
 import { type Subscription } from '@/models/schema'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { DotIndicator } from './ui/dot-indicator'
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
 
 type ExpenseCalendarProps = {
   subscriptions: Subscription[]
@@ -51,6 +53,8 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
     'November',
     'December',
   ]
+
+  const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
   const categories = [allCategory, ...new Set(subscriptions.map((sub) => sub.category))]
 
@@ -121,14 +125,14 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
 
     return (
       <>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-2 auto-rows-fr">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div key={day} className="text-center font-bold p-2">
               {day}
             </div>
           ))}
           {Array.from({ length: firstDayOfMonth }).map((_, index) => (
-            <div key={`empty-${index}`} className="p-2"></div>
+            <div key={`empty-${index}`}></div>
           ))}
           {days.map((day) => {
             const isToday = currentDate.getMonth() === today.getMonth() && day === today.getDate()
@@ -144,25 +148,38 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               : 0
             const hasSubscriptionsAndExpenses = hasSubscriptions
             const cellClasses = cn(
-              'border p-2 h-24 overflow-y-auto rounded-md',
+              'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
               isToday
                 ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50'
                 : 'bg-neutral-50 dark:bg-neutral-900',
             )
+            const mobileLabel = hasSubscriptionsAndExpenses
+              ? daySubscriptions.length > 9
+                ? '+9'
+                : daySubscriptions.length
+              : null
             return (
-              <motion.div
+              <motion.button
                 key={day}
                 className={cn(cellClasses, selectedDay === day && 'ring-2 ring-primary')}
                 whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 300 }}
                 onClick={() => setSelectedDay(selectedDay === day ? null : day)}
               >
-                <div className="font-bold text-muted-foreground">{day}</div>
-                {hasSubscriptionsAndExpenses && (
-                  <div className="text-base text-blue-500 dark:text-blue-400">{formatCurrency(dayTotal, currency)}</div>
-                )}
-                {hasSubscriptionsAndExpenses && <div className="text-xs">{formatSubscriptions(daySubscriptions)}</div>}
-              </motion.div>
+                <span className="block font-bold text-muted-foreground">{day}</span>
+                <div className="flex flex-col gap-1 overflow-hidden">
+                  {hasSubscriptionsAndExpenses && (
+                    <span className="text-base text-blue-500 dark:text-blue-400 hidden md:block">
+                      {formatCurrency(dayTotal, currency)}
+                    </span>
+                  )}
+                  {hasSubscriptionsAndExpenses && (
+                    <span className="text-xs hidden md:block">{formatSubscriptions(daySubscriptions)}</span>
+                  )}
+                  {mobileLabel && <DotIndicator className="inline-flex md:hidden">{mobileLabel}</DotIndicator>}
+                </div>
+              </motion.button>
             )
           })}
         </div>
@@ -171,7 +188,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
             <h4 className="text-lg font-semibold mb-2">
               Expenses for {months[currentDate.getMonth()]} {selectedDay}, {currentDate.getFullYear()}
             </h4>
-            <ScrollArea className="mt-4 pr-4">
+            <ScrollArea className="mt-4">
               {getDaySubscriptions(
                 filteredSubscriptions,
                 selectedDay,
@@ -180,7 +197,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               ).length === 0 ? (
                 <p>No expenses for this day.</p>
               ) : (
-                <ul className="space-y-4">
+                <ul className="space-y-4 [&_li:last-child]:border-b-0">
                   {getDaySubscriptions(
                     filteredSubscriptions,
                     selectedDay,
@@ -217,23 +234,30 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           const monthlyTotal = calculateMonthlyTotal(filteredSubscriptions, index, currentDate.getFullYear())
           const monthSubscriptions = getSubscriptionsForMonth(filteredSubscriptions, index)
           const cellClasses = cn(
-            'border p-4 overflow-y-auto rounded-md cursor-pointer',
+            'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
+            // 'focus:ring-2 focus:ring-primary',
             isCurrentMonth
               ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50'
               : 'bg-neutral-50 dark:bg-neutral-900',
           )
           return (
-            <motion.div
+            <motion.button
               key={month}
               className={cellClasses}
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
               onClick={() => handleMonthClick(index)}
             >
-              <div className="font-bold">{month}</div>
-              <span className="text-lg text-blue-500 dark:text-blue-400">{formatCurrency(monthlyTotal, currency)}</span>
-              <div className="text-sm">{formatSubscriptions(monthSubscriptions)}</div>
-            </motion.div>
+              <div className="font-bold">
+                <span className="hidden md:inline">{months[index]}</span>
+                <span className="inline md:hidden">{monthsShort[index]}</span>
+              </div>
+              <span className="text-sm md:text-lg text-blue-500 dark:text-blue-400">
+                {formatCurrency(monthlyTotal, currency)}
+              </span>
+              <div className="text-xs md:text-sm">{formatSubscriptions(monthSubscriptions)}</div>
+            </motion.button>
           )
         })}
         <div className="col-span-3 text-right p-2 font-bold">Total: {formatCurrency(totalYearlySum, currency)}</div>
@@ -244,26 +268,43 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
   const cardContent = (
     <div>
       {isMonthlyView ? (
-        <div className="mb-4 flex justify-between items-center">
-          <Button variant="outline" onClick={handlePreviousMonth} disabled={isPreviousDisabled()}>
-            Previous
-          </Button>
-          <h3 className="text-lg font-medium">
-            {months[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h3>
-          <Button variant="outline" onClick={handleNextMonth}>
-            Next
-          </Button>
+        <div className="mb-4 grid grid-cols-3 justify-between items-center">
+          <div className="col-span-1">
+            <Button variant="outline" onClick={handlePreviousMonth} disabled={isPreviousDisabled()}>
+              Previous
+            </Button>
+          </div>
+          <div className="col-span-1 text-center">
+            <div className="text-base md:text-lg font-medium">
+              <span className="hidden md:inline">
+                {months[currentDate.getMonth()]} {currentDate.getFullYear()}
+              </span>
+              <span className="inline md:hidden">
+                {monthsShort[currentDate.getMonth()]} {currentDate.getFullYear()}
+              </span>
+            </div>
+          </div>
+          <div className="col-span-1 text-right">
+            <Button variant="outline" onClick={handleNextMonth}>
+              Next
+            </Button>
+          </div>
         </div>
       ) : (
-        <div className="mb-4 flex justify-between items-center">
-          <Button variant="outline" onClick={handlePreviousYear} disabled={isPreviousDisabled()}>
-            Previous
-          </Button>
-          <h3 className="text-lg font-medium">{currentDate.getFullYear()}</h3>
-          <Button variant="outline" onClick={handleNextYear}>
-            Next
-          </Button>
+        <div className="mb-4 grid grid-cols-3 justify-between items-center">
+          <div className="col-span-1">
+            <Button variant="outline" onClick={handlePreviousYear} disabled={isPreviousDisabled()}>
+              Previous
+            </Button>
+          </div>
+          <div className="col-span-1 text-center">
+            <div className="text-lg font-medium">{currentDate.getFullYear()}</div>
+          </div>
+          <div className="col-span-1 text-right">
+            <Button variant="outline" onClick={handleNextYear}>
+              Next
+            </Button>
+          </div>
         </div>
       )}
       {isMonthlyView ? renderMonthlyView() : renderYearlyView()}
@@ -273,11 +314,11 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-start">
+        <CardTitle className="flex gap-4 justify-between items-start flex-col md:flex-row">
           <div>Expense Calendar</div>
-          <div className="flex items-center space-x-2">
+          <div className="flex gap-2">
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[160px] md:w-[180px]">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -288,14 +329,15 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
                 ))}
               </SelectContent>
             </Select>
-            <div className="space-x-2 text-base">
-              <Button variant={isMonthlyView ? 'default' : 'outline'} onClick={() => setIsMonthlyView(true)}>
-                Monthly
-              </Button>
-              <Button variant={!isMonthlyView ? 'default' : 'outline'} onClick={() => setIsMonthlyView(false)}>
-                Yearly
-              </Button>
-            </div>
+            <ToggleGroup
+              type="single"
+              size="sm"
+              value={isMonthlyView ? 'monthly' : 'yearly'}
+              onValueChange={(value) => setIsMonthlyView(value === 'monthly')}
+            >
+              <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
+              <ToggleGroupItem value="yearly">Yearly</ToggleGroupItem>
+            </ToggleGroup>
           </div>
         </CardTitle>
       </CardHeader>

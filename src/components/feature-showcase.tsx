@@ -5,7 +5,7 @@ import { ThemedImage } from './themed-image'
 const features = [
   {
     title: 'List and Charts Overview',
-    description: 'Get a quick glance at your subscriptions with an intuitive list view and insightful charts.',
+    description: 'Get a quick glance at your expenses with an intuitive list view and insightful charts.',
     image: {
       light: '/screenshots/list-charts_light.png',
       dark: '/screenshots/list-charts_dark.png',

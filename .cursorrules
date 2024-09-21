@@ -31,3 +31,8 @@ The app features the following:
 - A dashboard that lists your expenses, shows the calendar view(s), and pie charts.
 - Users have a settings page to change their currency, monthly income (optional), monthly budget (optional), and delete
   their account.
+
+Also, in general, follow these rules strictly:
+
+- Don't change or remove existing functionality unless explicitly told to do so, or required by the task at hand.
+- Don't change the UI/UX design unless explicitly told to do so, or required by the task at hand.

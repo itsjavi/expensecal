@@ -31,7 +31,7 @@ export default function ExpenseList({ subscriptions, currency }: ExpenseListProp
         {subscriptions.length === 0 ? (
           <p>You haven't added any expenses yet.</p>
         ) : (
-          <ScrollArea className="h-full pr-4">
+          <ScrollArea className="h-full">
             <ul className="space-y-4">
               {subscriptions.map((sub, index) => (
                 <li

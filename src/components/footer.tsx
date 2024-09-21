@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground text-center md:text-left">
             <p>
               &copy; {year} ExpenseCal by{' '}
               <a
@@ -18,7 +18,7 @@ export default function Footer() {
               >
                 Javier Aguilar
               </a>
-              . All rights reserved.
+              . <span className="block md:inline">All rights reserved.</span>
             </p>
           </div>
           <nav className="flex space-x-4 text-sm">

@@ -18,8 +18,8 @@ export function HomeHero({ isLoggedIn }: HomeHeroProps) {
     >
       <h1 className="text-4xl font-bold mb-6 sm:text-5xl">Master Your Expenses</h1>
       <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
-        Are you aware of how many subscriptions you have? Our app provides powerful tools to help you track, analyze,
-        and optimize your expenses with ease, to help you save money and focus on what's important.
+        Are you aware of how many subscriptions you have? Our app provides many tools to help you track, analyze, and
+        optimize your expenses with ease, to help you save money.
       </p>
       {isLoggedIn ? (
         <Link href="/dashboard">
