@@ -69,7 +69,7 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
         {subscriptions.length === 0 ? (
-          <p>Add some subscriptions to see your expense charts.</p>
+          <p>Add some expenses to see your expense charts.</p>
         ) : (
           <>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1">

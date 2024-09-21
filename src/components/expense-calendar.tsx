@@ -342,7 +342,12 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {filteredSubscriptions.length === 0 ? <p>No subscriptions found for the selected category.</p> : cardContent}
+        {subscriptions.length === 0 ? <p>Add some expenses to see your expense calendar.</p> : cardContent}
+        {subscriptions.length > 0 && filteredSubscriptions.length === 0 ? (
+          <p>No expenses found for the selected category.</p>
+        ) : (
+          cardContent
+        )}
       </CardContent>
     </Card>
   )
