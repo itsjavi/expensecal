@@ -94,7 +94,7 @@ export default function SettingsForm({
               </Select>
             </div>
             <div>
-              <Label htmlFor="monthlyIncome">Monthly Income (Optional)</Label>
+              <Label htmlFor="monthlyIncome">Monthly Income</Label>
               <Input
                 id="monthlyIncome"
                 type="number"
@@ -105,7 +105,7 @@ export default function SettingsForm({
               />
             </div>
             <div>
-              <Label htmlFor="monthlyBudget">Monthly Budget (Optional)</Label>
+              <Label htmlFor="monthlyBudget">Monthly Budget</Label>
               <Input
                 id="monthlyBudget"
                 type="number"
