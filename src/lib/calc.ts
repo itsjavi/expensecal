@@ -40,7 +40,7 @@ export const calculateDailyExpense = (
       } else if (sub.recurringType === 'yearly' && monthIndex === startMonth) {
         return total + sub.cost
       } else if (sub.recurringType === 'custom') {
-        const monthsSinceStart = monthIndex - startMonth
+        const monthsSinceStart = (year - Math.floor(startMonth / 12)) * 12 + monthIndex - (startMonth % 12)
         if (monthsSinceStart % (sub.customRecurringMonths || 1) === 0) {
           return total + sub.cost
         }
@@ -54,7 +54,8 @@ export const calculateMonthlyTotal = (subscriptions: Subscription[], monthIndex:
   let total = 0
   const daysInMonth = getDaysCountInMonth(year, monthIndex)
   for (let day = 1; day <= daysInMonth; day++) {
-    total += calculateDailyExpense(getDaySubscriptions(subscriptions, day, monthIndex), day, monthIndex, year)
+    const daySubscriptions = getDaySubscriptions(subscriptions, day, monthIndex, year)
+    total += calculateDailyExpense(daySubscriptions, day, monthIndex, year)
   }
   return total
 }
@@ -66,23 +67,35 @@ export const getSubscriptionsForMonth = (subscriptions: Subscription[], monthInd
   })
 }
 
-export const getDaySubscriptions = (subscriptions: Subscription[], day: number, monthIndex: number) => {
+export const getDaySubscriptions = (subscriptions: Subscription[], day: number, monthIndex: number, year: number) => {
   return subscriptions.filter((sub) => {
+    const startMonth = sub.startingMonth || 0
+    const startYear = Math.floor(startMonth / 12)
+    const adjustedStartMonth = startMonth % 12
+
+    if (year < startYear || (year === startYear && monthIndex < adjustedStartMonth)) {
+      return false
+    }
+
     if (sub.recurringType === 'yearly') {
-      return sub.startingMonth === monthIndex && day === sub.dayOfMonth
+      return monthIndex === adjustedStartMonth && day === sub.dayOfMonth
     }
     if (sub.recurringType === 'fortnightly') {
-      const [startDay, endDay] = getFortnightlyDays(new Date().getFullYear(), monthIndex, sub.dayOfMonth)
+      const [startDay, endDay] = getFortnightlyDays(year, monthIndex, sub.dayOfMonth)
       return day === startDay || day === endDay
+    }
+    if (sub.recurringType === 'custom') {
+      const monthsSinceStart = (year - startYear) * 12 + monthIndex - adjustedStartMonth
+      return monthsSinceStart % (sub.customRecurringMonths || 1) === 0 && day === sub.dayOfMonth
     }
     return sub.dayOfMonth === day
   })
 }
 
 export const calculateYearlyTotal = (subscriptions: Subscription[], year: number) => {
-  return Array.from({ length: 12 }, (_, index) => index).reduce(
+  return Array.from({ length: 12 }, (_, monthIndex) => monthIndex).reduce(
     (sum, monthIndex) => sum + calculateMonthlyTotal(subscriptions, monthIndex, year),
-    0,
+    0
   )
 }
 

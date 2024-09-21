@@ -132,7 +132,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           ))}
           {days.map((day) => {
             const isToday = currentDate.getMonth() === today.getMonth() && day === today.getDate()
-            const daySubscriptions = getDaySubscriptions(filteredSubscriptions, day, currentDate.getMonth())
+            const daySubscriptions = getDaySubscriptions(filteredSubscriptions, day, currentDate.getMonth(), currentDate.getFullYear())
             const hasSubscriptions = daySubscriptions.length > 0
             const dayTotal = hasSubscriptions
               ? calculateDailyExpense(daySubscriptions, day, currentDate.getMonth(), currentDate.getFullYear())
