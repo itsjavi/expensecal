@@ -42,7 +42,7 @@ export function FeatureShowcase() {
               src={feature.image}
               alt={feature.title}
               width={800}
-              height={600}
+              height={400}
               className="rounded-xl shadow-xl w-full ring-1 ring-gray-400/10 dark:ring-gray-700/10"
             />
           </div>
