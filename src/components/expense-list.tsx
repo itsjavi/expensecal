@@ -4,20 +4,20 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCurrency } from '@/lib/utils'
-import { type Subscription } from '@/models/schema'
+import { type Transaction } from '@/models/schema'
 import { DownloadIcon, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import AddExpenseDialog from './add-expense-dialog'
 import EditExpenseDialog from './edit-expense-dialog'
 
 type ExpenseListProps = {
-  subscriptions: Subscription[]
+  subscriptions: Transaction[]
   currency: string
 }
 
 export default function ExpenseList({ subscriptions, currency }: ExpenseListProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
+  const [editingSubscription, setEditingSubscription] = useState<Transaction | null>(null)
 
   function ExportButton({ href, label }: { href: string; label: string }) {
     return (
@@ -54,7 +54,7 @@ export default function ExpenseList({ subscriptions, currency }: ExpenseListProp
                   <div>
                     <h3 className="font-medium">{sub.title}</h3>
                     <p className="text-sm text-gray-500">
-                      {formatCurrency(sub.cost, currency)} / {sub.recurringType}
+                      {formatCurrency(sub.amount, currency)} / {sub.recurringType}
                     </p>
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => setEditingSubscription(sub)}>

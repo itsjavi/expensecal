@@ -8,11 +8,11 @@ import {
   calculateYearlyTotal,
 } from '@/lib/calc'
 import { cn, formatCurrency } from '@/lib/utils'
-import { type Subscription } from '@/models/schema'
+import { type Transaction } from '@/models/schema'
 import { CoinsIcon, PiggyBankIcon, WalletIcon } from 'lucide-react'
 
 type DashboardMetricsProps = {
-  subscriptions: Subscription[]
+  subscriptions: Transaction[]
   currency: string
   monthlyIncome?: number
   monthlyBudget?: number

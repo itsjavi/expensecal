@@ -2,7 +2,7 @@
 
 import { assureSessionWithUser } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { subscriptions } from '@/models/schema'
+import { transactions } from '@/models/schema'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
@@ -11,21 +11,21 @@ export async function addSubscription(formData: FormData) {
 
   const title = formData.get('title') as string
   const category = formData.get('category') as string
-  const cost = parseInt(formData.get('cost') as string, 10)
-  const dayOfMonth = parseInt(formData.get('dayOfMonth') as string, 10)
+  const amount = parseInt(formData.get('amount') as string, 10)
+  const monthlyDay = parseInt(formData.get('dayOfMonth') as string, 10)
   const recurringType = formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom'
-  const customRecurringMonths =
+  const monthlyCustomRecurringMonths =
     recurringType === 'custom' ? parseInt(formData.get('customRecurringMonths') as string, 10) : null
   const startingMonth = parseInt(formData.get('startingMonth') as string, 10)
 
-  await db.insert(subscriptions).values({
+  await db.insert(transactions).values({
     userId: session.user.id,
     title,
     category: category as any,
-    cost,
-    dayOfMonth,
+    amount,
+    monthlyDay,
     recurringType,
-    customRecurringMonths,
+    monthlyCustomRecurringMonths,
     startingMonth,
   })
 
@@ -38,25 +38,25 @@ export async function updateSubscription(formData: FormData) {
   const id = formData.get('id') as string
   const title = formData.get('title') as string
   const category = formData.get('category') as string
-  const cost = parseInt(formData.get('cost') as string, 10)
-  const dayOfMonth = parseInt(formData.get('dayOfMonth') as string, 10)
+  const amount = parseInt(formData.get('cost') as string, 10)
+  const monthlyDay = parseInt(formData.get('dayOfMonth') as string, 10)
   const recurringType = formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom'
-  const customRecurringMonths =
+  const monthlyCustomRecurringMonths =
     recurringType === 'custom' ? parseInt(formData.get('customRecurringMonths') as string, 10) : null
   const startingMonth = parseInt(formData.get('startingMonth') as string, 10)
 
   await db
-    .update(subscriptions)
+    .update(transactions)
     .set({
       title,
       category: category as any,
-      cost,
-      dayOfMonth,
+      amount,
+      monthlyDay,
       recurringType,
-      customRecurringMonths,
+      monthlyCustomRecurringMonths,
       startingMonth,
     })
-    .where(eq(subscriptions.id, id))
+    .where(eq(transactions.id, id))
 
   revalidatePath('/dashboard')
 }
@@ -66,14 +66,14 @@ export async function getSubscriptions() {
 
   return db
     .select()
-    .from(subscriptions)
-    .where(eq(subscriptions.userId, session.user.id))
-    .orderBy(subscriptions.category, subscriptions.startingMonth, subscriptions.dayOfMonth)
+    .from(transactions)
+    .where(eq(transactions.userId, session.user.id))
+    .orderBy(transactions.category, transactions.startingMonth, transactions.monthlyDay)
 }
 
 export async function deleteSubscription(id: string) {
   await assureSessionWithUser()
 
-  await db.delete(subscriptions).where(eq(subscriptions.id, id))
+  await db.delete(transactions).where(eq(transactions.id, id))
   revalidatePath('/dashboard')
 }

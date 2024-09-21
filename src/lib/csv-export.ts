@@ -5,13 +5,13 @@ import { getDaySubscriptions } from './calc'
 export async function exportRecurringExpenses(subscriptions: Transaction[]): Promise<string> {
   const rows = subscriptions.map((sub) => ({
     name: sub.title,
-    amount: sub.cost,
+    amount: sub.amount,
     frequency: sub.recurringType,
     category: sub.category,
     fromDate: sub.startingMonth ? new Date(sub.startingMonth * 30 * 24 * 60 * 60 * 1000).toISOString() : '',
     toDate: '', // Assuming there's no endingMonth field in the current schema
-    dayOfMonth: sub.dayOfMonth,
-    monthlyRecurringMonths: sub.customRecurringMonths || '',
+    dayOfMonth: sub.monthlyDay,
+    monthlyRecurringMonths: sub.monthlyCustomRecurringMonths || '',
   }))
 
   return writeToString(rows, { headers: true })
@@ -32,7 +32,7 @@ export async function exportMonthlyExpenses(
     daySubscriptions.forEach((sub) => {
       rows.push({
         name: sub.title,
-        amount: sub.cost,
+        amount: sub.amount,
         day,
         month: month + 1,
         year,
@@ -57,7 +57,7 @@ export async function exportYearlyExpenses(subscriptions: Transaction[], year: n
       daySubscriptions.forEach((sub) => {
         rows.push({
           name: sub.title,
-          amount: sub.cost,
+          amount: sub.amount,
           day,
           month: month + 1,
           year,

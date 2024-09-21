@@ -1,4 +1,4 @@
-import { type Subscription } from '@/models/schema'
+import { type Transaction } from '@/models/schema'
 
 export const getDaysCountInMonth = (year: number, monthIndex: number) => {
   return new Date(year, monthIndex + 1, 0).getDate()
@@ -18,7 +18,7 @@ export const getFullWeeksInMonth = (year: number, monthIndex: number) => {
 }
 
 export const calculateDailyExpense = (
-  dailySubscriptions: Subscription[],
+  dailySubscriptions: Transaction[],
   day: number,
   monthIndex: number,
   year: number,
@@ -28,21 +28,21 @@ export const calculateDailyExpense = (
     if (monthIndex < startMonth) return total
 
     const isFortnightlyDay = sub.recurringType === 'fortnightly'
-    const [firstDay, secondDay] = isFortnightlyDay ? getFortnightlyDays(year, monthIndex, sub.dayOfMonth) : [day, day]
+    const [firstDay, secondDay] = isFortnightlyDay ? getFortnightlyDays(year, monthIndex, sub.monthlyDay) : [day, day]
 
-    if (sub.dayOfMonth === firstDay || sub.dayOfMonth === secondDay) {
+    if (sub.monthlyDay === firstDay || sub.monthlyDay === secondDay) {
       if (sub.recurringType === 'weekly') {
-        return total + sub.cost * getFullWeeksInMonth(year, monthIndex)
+        return total + sub.amount * getFullWeeksInMonth(year, monthIndex)
       } else if (sub.recurringType === 'fortnightly') {
-        return total + sub.cost
+        return total + sub.amount
       } else if (sub.recurringType === 'monthly') {
-        return total + sub.cost
+        return total + sub.amount
       } else if (sub.recurringType === 'yearly' && monthIndex === startMonth) {
-        return total + sub.cost
+        return total + sub.amount
       } else if (sub.recurringType === 'custom') {
         const monthsSinceStart = (year - Math.floor(startMonth / 12)) * 12 + monthIndex - (startMonth % 12)
-        if (monthsSinceStart % (sub.customRecurringMonths || 1) === 0) {
-          return total + sub.cost
+        if (monthsSinceStart % (sub.monthlyCustomRecurringMonths || 1) === 0) {
+          return total + sub.amount
         }
       }
     }
@@ -50,7 +50,7 @@ export const calculateDailyExpense = (
   }, 0)
 }
 
-export const calculateMonthlyTotal = (subscriptions: Subscription[], monthIndex: number, year: number) => {
+export const calculateMonthlyTotal = (subscriptions: Transaction[], monthIndex: number, year: number) => {
   let total = 0
   const daysInMonth = getDaysCountInMonth(year, monthIndex)
   for (let day = 1; day <= daysInMonth; day++) {
@@ -60,14 +60,14 @@ export const calculateMonthlyTotal = (subscriptions: Subscription[], monthIndex:
   return total
 }
 
-export const getSubscriptionsForMonth = (subscriptions: Subscription[], monthIndex: number) => {
+export const getSubscriptionsForMonth = (subscriptions: Transaction[], monthIndex: number) => {
   return subscriptions.filter((sub) => {
     const startMonth = sub.startingMonth || 0
     return monthIndex >= startMonth
   })
 }
 
-export const getDaySubscriptions = (subscriptions: Subscription[], day: number, monthIndex: number, year: number) => {
+export const getDaySubscriptions = (subscriptions: Transaction[], day: number, monthIndex: number, year: number) => {
   return subscriptions.filter((sub) => {
     const startMonth = sub.startingMonth || 0
     const startYear = Math.floor(startMonth / 12)
@@ -78,28 +78,28 @@ export const getDaySubscriptions = (subscriptions: Subscription[], day: number, 
     }
 
     if (sub.recurringType === 'yearly') {
-      return monthIndex === adjustedStartMonth && day === sub.dayOfMonth
+      return monthIndex === adjustedStartMonth && day === sub.monthlyDay
     }
     if (sub.recurringType === 'fortnightly') {
-      const [startDay, endDay] = getFortnightlyDays(year, monthIndex, sub.dayOfMonth)
+      const [startDay, endDay] = getFortnightlyDays(year, monthIndex, sub.monthlyDay)
       return day === startDay || day === endDay
     }
     if (sub.recurringType === 'custom') {
       const monthsSinceStart = (year - startYear) * 12 + monthIndex - adjustedStartMonth
-      return monthsSinceStart % (sub.customRecurringMonths || 1) === 0 && day === sub.dayOfMonth
+      return monthsSinceStart % (sub.monthlyCustomRecurringMonths || 1) === 0 && day === sub.monthlyDay
     }
-    return sub.dayOfMonth === day
+    return sub.monthlyDay === day
   })
 }
 
-export const calculateYearlyTotal = (subscriptions: Subscription[], year: number) => {
+export const calculateYearlyTotal = (subscriptions: Transaction[], year: number) => {
   return Array.from({ length: 12 }, (_, monthIndex) => monthIndex).reduce(
     (sum, monthIndex) => sum + calculateMonthlyTotal(subscriptions, monthIndex, year),
     0,
   )
 }
 
-export const calculateCategorySums = (subscriptions: Subscription[], _year: number) => {
+export const calculateCategorySums = (subscriptions: Transaction[], _year: number) => {
   const categorySums: { [key: string]: number } = {}
 
   subscriptions.forEach((sub) => {
@@ -111,20 +111,20 @@ export const calculateCategorySums = (subscriptions: Subscription[], _year: numb
     let annualCost = 0
     switch (sub.recurringType) {
       case 'weekly':
-        annualCost = sub.cost * 52
+        annualCost = sub.amount * 52
         break
       case 'fortnightly':
-        annualCost = sub.cost * 26
+        annualCost = sub.amount * 26
         break
       case 'monthly':
-        annualCost = sub.cost * 12
+        annualCost = sub.amount * 12
         break
       case 'yearly':
-        annualCost = sub.cost
+        annualCost = sub.amount
         break
       case 'custom':
-        const monthsPerYear = 12 / (sub.customRecurringMonths || 12)
-        annualCost = sub.cost * monthsPerYear
+        const monthsPerYear = 12 / (sub.monthlyCustomRecurringMonths || 12)
+        annualCost = sub.amount * monthsPerYear
         break
     }
 
@@ -134,12 +134,12 @@ export const calculateCategorySums = (subscriptions: Subscription[], _year: numb
   return Object.entries(categorySums).map(([name, value]) => ({ name, value }))
 }
 
-export const calculateAverageMonthlyExpenses = (subscriptions: Subscription[], year: number) => {
+export const calculateAverageMonthlyExpenses = (subscriptions: Transaction[], year: number) => {
   const totalYearly = calculateYearlyTotal(subscriptions, year)
   return totalYearly / 12
 }
 
-export const calculateCurrentMonthExpenses = (subscriptions: Subscription[], year: number, month: number) => {
+export const calculateCurrentMonthExpenses = (subscriptions: Transaction[], year: number, month: number) => {
   return calculateMonthlyTotal(subscriptions, month, year)
 }
 

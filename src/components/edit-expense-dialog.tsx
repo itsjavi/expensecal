@@ -17,35 +17,34 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { capitalizeFirstLetter } from '@/lib/utils'
-import { expenseCategories, type Subscription } from '@/models/schema'
+import { capitalizeFirstLetter, parseCurrency } from '@/lib/utils'
+import { expenseCategories, type Transaction } from '@/models/schema'
 import { useEffect, useState } from 'react'
-import { parseCurrency } from '@/lib/utils'
 
 type EditExpenseDialogProps = {
-  subscription: Subscription
+  subscription: Transaction
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
 export default function EditExpenseDialog({ subscription, open, onOpenChange }: EditExpenseDialogProps) {
   const [title, setTitle] = useState(subscription.title)
-  const [cost, setCost] = useState((subscription.cost / 100).toFixed(2))
-  const [dayOfMonth, setDayOfMonth] = useState(subscription.dayOfMonth.toString())
+  const [cost, setCost] = useState((subscription.amount / 100).toFixed(2))
+  const [dayOfMonth, setDayOfMonth] = useState(subscription.monthlyDay.toString())
   const [recurringType, setRecurringType] = useState(subscription.recurringType)
   const [category, setCategory] = useState(subscription.category)
   const [customRecurringMonths, setCustomRecurringMonths] = useState(
-    subscription.customRecurringMonths?.toString() || '',
+    subscription.monthlyCustomRecurringMonths?.toString() || '',
   )
   const [startingMonth, setStartingMonth] = useState(subscription.startingMonth.toString())
 
   useEffect(() => {
     setTitle(subscription.title)
-    setCost((subscription.cost / 100).toFixed(2))
-    setDayOfMonth(subscription.dayOfMonth.toString())
+    setCost((subscription.amount / 100).toFixed(2))
+    setDayOfMonth(subscription.monthlyDay.toString())
     setRecurringType(subscription.recurringType)
     setCategory(subscription.category)
-    setCustomRecurringMonths(subscription.customRecurringMonths?.toString() || '')
+    setCustomRecurringMonths(subscription.monthlyCustomRecurringMonths?.toString() || '')
     setStartingMonth(subscription.startingMonth.toString())
   }, [subscription])
 

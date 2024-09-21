@@ -1,13 +1,13 @@
 import { deleteSubscription } from '@/app/actions/subscriptions'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
-import { type Subscription } from '@/models/schema'
+import { type Transaction } from '@/models/schema'
 
 export default function SubscriptionList({
   subscriptions,
   currency,
 }: {
-  subscriptions: Subscription[]
+  subscriptions: Transaction[]
   currency: string
 }) {
   return (
@@ -22,7 +22,7 @@ export default function SubscriptionList({
               <div>
                 <h3 className="font-medium">{sub.title}</h3>
                 <p className="text-sm text-gray-500">
-                  {formatCurrency(sub.cost, currency)} / {sub.recurringType}
+                  {formatCurrency(sub.amount, currency)} / {sub.recurringType}
                 </p>
               </div>
               <form action={deleteSubscription.bind(null, sub.id)}>

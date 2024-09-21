@@ -4,12 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { calculateCategorySums, calculateMonthlyTotal, calculateYearlyTotal } from '@/lib/calc'
 import { formatCurrency } from '@/lib/utils'
-import type { Subscription } from '@/models/schema'
+import type { Transaction } from '@/models/schema'
 import { useState } from 'react'
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type ExpenseChartsProps = {
-  subscriptions: Subscription[]
+  subscriptions: Transaction[]
   currency: string
   monthlyIncome: number
 }

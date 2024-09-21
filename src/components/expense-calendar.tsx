@@ -220,7 +220,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
                       <div>
                         <h3 className="font-medium">{sub.title}</h3>
                         <p className="text-sm text-gray-500">
-                          {formatCurrency(sub.cost, currency)} / {sub.recurringType}
+                          {formatCurrency(sub.amount, currency)} / {sub.recurringType}
                         </p>
                       </div>
                     </li>

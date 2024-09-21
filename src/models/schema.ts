@@ -89,7 +89,7 @@ export const authenticators = pgTable(
   }),
 )
 
-export const recurringTypes = ['weekly', 'fortnightly', 'monthly', 'yearly', 'custom'] as const
+export const recurringTypes = ['one-time', 'weekly', 'fortnightly', 'monthly', 'yearly', 'custom'] as const
 export type RecurringType = (typeof recurringTypes)[number]
 export const recurringTypeEnum = pgEnum('recurring_type', recurringTypes)
 
@@ -108,7 +108,7 @@ export const expenseCategories = [
 export type ExpenseCategory = (typeof expenseCategories)[number]
 export const expenseCategoryEnum = pgEnum('expense_category', expenseCategories)
 
-export const subscriptions = pgTable('subscription', {
+export const transactions = pgTable('transaction', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -117,14 +117,35 @@ export const subscriptions = pgTable('subscription', {
     .notNull(),
   title: text('title').notNull(),
   logo: text('logo'),
-  cost: integer('cost').notNull(),
-  dayOfMonth: integer('day_of_month').default(1).notNull(),
-  recurringType: recurringTypeEnum('recurring_type').default('monthly').notNull(),
-  customRecurringMonths: integer('custom_recurring_months'),
-  startingMonth: integer('starting_month').default(0).notNull(), // 0 for January, 11 for December
+  amount: integer('amount').notNull(),
   category: expenseCategoryEnum('category').default('other').notNull(),
+
+  // recurring options:
+  recurringType: recurringTypeEnum('recurring_type').default('monthly').notNull(),
+  monthlyDay: integer('monthly_day').default(1).notNull(),
+  monthlyCustomRecurringMonths: integer('monthly_recurring_months'),
+  startingMonth: integer('starting_month').default(0).notNull(), // 0 for January, 11 for December
+  startDate: timestamp('start_date'),
+  endDate: timestamp('end_date'),
+  // end recurring options
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-export type Subscription = typeof subscriptions.$inferSelect
+export type Transactionx = typeof transactions.$inferSelect
+export type Transaction = {
+  id: any
+  userId: any
+  title: any
+  logo: any
+  amount: any
+  category: any
+  recurringType: any
+  monthlyDay: any
+  monthlyCustomRecurringMonths: any
+  startingMonth: any
+  startDate: any
+  endDate: any
+  createdAt: any
+  updatedAt: any
+}
