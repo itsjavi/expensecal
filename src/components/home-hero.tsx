@@ -16,10 +16,10 @@ export function HomeHero({ isLoggedIn }: HomeHeroProps) {
       transition={{ duration: 0.5 }}
       className="text-center pt-12 sm:pt-24"
     >
-      <h1 className="text-4xl font-bold mb-6 sm:text-5xl">Master Your Expenses</h1>
+      <h1 className="text-4xl font-bold mb-6 sm:text-5xl">Master Your Recurring Expenses</h1>
       <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
         Are you aware of how many subscriptions you have? Our app provides many tools to help you track, analyze, and
-        optimize your expenses with ease, to help you save money.
+        optimize your personal recurring expenses with ease, to help you save money.
       </p>
       {isLoggedIn ? (
         <Link href="/dashboard">
