@@ -1,5 +1,4 @@
 import { getExpenses } from '@/app/actions/transactions'
-import { BrandLogoSearch } from '@/components/brand-logo-search'
 import { DashboardMetrics } from '@/components/dashboard-metrics'
 import ExpenseCalendar from '@/components/expense-calendar'
 import ExpenseCharts from '@/components/expense-charts'
@@ -35,7 +34,6 @@ export default async function Dashboard() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">My Dashboard</h1>
-      <BrandLogoSearch placeholder="Search for a service" initialValue="Netflix" />
       {hasSubscriptions && (
         <div className="mb-8">
           <DashboardMetrics
