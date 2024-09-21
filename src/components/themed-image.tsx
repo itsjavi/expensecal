@@ -13,7 +13,7 @@ interface ThemedImageProps extends Omit<ImageProps, 'src'> {
   }
 }
 
-export function ThemedImage({ src, ...props }: ThemedImageProps) {
+export function ThemedImage({ src, className, ...props }: ThemedImageProps) {
   const { theme } = useTheme()
   const systemTheme = useDetectSystemTheme()
   const isMounted = useMounted()
@@ -29,6 +29,7 @@ export function ThemedImage({ src, ...props }: ThemedImageProps) {
       'opacity-0': !isMounted,
       'opacity-100': isMounted,
     },
+    className,
   ])
 
   return <Image src={currentSrc} {...props} className={classNames} />
