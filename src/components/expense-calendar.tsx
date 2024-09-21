@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
@@ -13,15 +13,27 @@ import {
   getSubscriptionsForMonth,
 } from '@/lib/calc'
 import { cn, formatCurrency } from '@/lib/utils'
-import { type Subscription } from '@/models/schema'
+import { type Transaction } from '@/models/schema'
 import { motion } from 'framer-motion'
+import { DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
 import { DotIndicator } from './ui/dot-indicator'
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
 
 type ExpenseCalendarProps = {
-  subscriptions: Subscription[]
+  subscriptions: Transaction[]
   currency: string
+}
+
+function ExportButton({ href, label }: { href: string; label: string }) {
+  return (
+    <Button variant="ghost" size="sm" asChild className="text-muted-foreground">
+      <a href={href} download>
+        <DownloadIcon className="h-4 w-4 mr-2" />
+        {label}
+      </a>
+    </Button>
+  )
 }
 
 export default function ExpenseCalendar({ subscriptions = [], currency }: ExpenseCalendarProps) {
@@ -33,7 +45,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
   const today = new Date()
   const minYear = today.getFullYear() - 1
 
-  const formatSubscriptions = (subs: Subscription[]) => {
+  const formatSubscriptions = (subs: Transaction[]) => {
     if (subs.length === 0) return ''
     if (subs.length <= 2) return subs.map((sub) => sub.title).join(', ')
     return `${subs[0].title}, ${subs[1].title}, +${subs.length - 2} more`
@@ -350,6 +362,12 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         {hasExpensesButNoFilteredExpenses ? <p>No expenses found for the selected category.</p> : ''}
         {hasFilteredExpenses && cardContent}
       </CardContent>
+      <CardFooter>
+        <ExportButton
+          href={`/api/export/${isMonthlyView ? 'monthly' : 'yearly'}?year=${currentDate.getFullYear()}${isMonthlyView ? `&month=${currentDate.getMonth()}` : ''}`}
+          label={`Export ${isMonthlyView ? 'Monthly' : 'Yearly'} Expenses`}
+        />
+      </CardFooter>
     </Card>
   )
 }

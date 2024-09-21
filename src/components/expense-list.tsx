@@ -1,11 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCurrency } from '@/lib/utils'
 import { type Subscription } from '@/models/schema'
-import { Pencil } from 'lucide-react'
+import { DownloadIcon, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import AddExpenseDialog from './add-expense-dialog'
 import EditExpenseDialog from './edit-expense-dialog'
@@ -18,6 +18,17 @@ type ExpenseListProps = {
 export default function ExpenseList({ subscriptions, currency }: ExpenseListProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
+
+  function ExportButton({ href, label }: { href: string; label: string }) {
+    return (
+      <Button variant="ghost" size="sm" asChild className="text-muted-foreground">
+        <a href={href} download>
+          <DownloadIcon className="h-4 w-4 mr-2" />
+          {label}
+        </a>
+      </Button>
+    )
+  }
 
   return (
     <Card className="h-full flex flex-col">
@@ -66,6 +77,9 @@ export default function ExpenseList({ subscriptions, currency }: ExpenseListProp
           }}
         />
       )}
+      <CardFooter>
+        <ExportButton href="/api/export/recurring" label="Export Recurring Expenses" />
+      </CardFooter>
     </Card>
   )
 }
