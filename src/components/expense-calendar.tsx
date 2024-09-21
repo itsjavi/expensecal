@@ -16,6 +16,7 @@ import { cn, formatCurrency } from '@/lib/utils'
 import { type Transaction } from '@/models/schema'
 import { motion } from 'framer-motion'
 import { DownloadIcon } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 import { DotIndicator } from './ui/dot-indicator'
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
@@ -143,6 +144,8 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               {day}
             </div>
           ))}
+        </div>
+        <div className="grid grid-cols-7 gap-2 auto-rows-fr">
           {Array.from({ length: firstDayOfMonth }).map((_, index) => (
             <div key={`empty-${index}`}></div>
           ))}
@@ -160,16 +163,28 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               : 0
             const hasSubscriptionsAndExpenses = hasSubscriptions
             const cellClasses = cn(
-              'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
+              'border p-2 rounded-md flex flex-col justify-start h-full gap-1 items-center md:items-start text-left',
               isToday
                 ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50'
                 : 'bg-neutral-50 dark:bg-neutral-900',
             )
+
             const mobileLabel = hasSubscriptionsAndExpenses
               ? daySubscriptions.length > 9
                 ? '+9'
                 : daySubscriptions.length
               : null
+
+            // Sort subscriptions to prioritize those with logos
+            const sortedSubscriptions = [...daySubscriptions].sort((a, b) => {
+              if (a.logo && !b.logo) return -1
+              if (!a.logo && b.logo) return 1
+              return 0
+            })
+
+            const displayedSubscriptions = sortedSubscriptions.slice(0, 4)
+            const remainingCount = daySubscriptions.length - displayedSubscriptions.length
+
             return (
               <motion.button
                 key={day}
@@ -180,17 +195,41 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
                 onClick={() => setSelectedDay(selectedDay === day ? null : day)}
               >
                 <span className="block font-bold text-muted-foreground">{day}</span>
-                <div className="flex flex-col gap-1 overflow-hidden">
+                <span className="flex flex-col gap-1 overflow-hidden">
                   {hasSubscriptionsAndExpenses && (
                     <span className="text-base text-blue-500 dark:text-blue-400 hidden md:block">
                       {formatCurrency(dayTotal, currency)}
                     </span>
                   )}
-                  {hasSubscriptionsAndExpenses && (
-                    <span className="text-xs hidden md:block">{formatSubscriptions(daySubscriptions)}</span>
+                  {mobileLabel && (
+                    <DotIndicator className="inline-flex md:hidden bg-blue-300 text-black font-bold">
+                      {mobileLabel}
+                    </DotIndicator>
                   )}
-                  {mobileLabel && <DotIndicator className="inline-flex md:hidden">{mobileLabel}</DotIndicator>}
-                </div>
+                  <span className="flex-col gap-1 hidden md:flex">
+                    <span className="flex items-center gap-1">
+                      {displayedSubscriptions.map((sub, index) =>
+                        sub.logo ? (
+                          <Image
+                            key={index}
+                            src={sub.logo}
+                            alt={sub.title}
+                            width={32}
+                            height={32}
+                            className="rounded-full"
+                          />
+                        ) : (
+                          <span key={index} className="text-xs truncate">
+                            {sub.title}
+                          </span>
+                        ),
+                      )}
+                    </span>
+                    {remainingCount > 0 && (
+                      <span className="text-xs text-muted-foreground">+{remainingCount} more</span>
+                    )}
+                  </span>
+                </span>
               </motion.button>
             )
           })}
@@ -218,10 +257,17 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
                   ).map((sub) => (
                     <li key={sub.id} className="flex items-center justify-between border-b pb-2">
                       <div>
-                        <h3 className="font-medium">{sub.title}</h3>
-                        <p className="text-sm text-gray-500">
-                          {formatCurrency(sub.amount, currency)} / {sub.recurringType}
-                        </p>
+                        <div className="flex items-center space-x-4 font-medium">
+                          {sub.logo && (
+                            <Image src={sub.logo} alt={sub.title} width={32} height={32} className="rounded-full" />
+                          )}
+                          <div>
+                            <div className="font-medium">{sub.title}</div>
+                            <div className="text-sm text-gray-500">
+                              {formatCurrency(sub.amount, currency)} / {sub.recurringType}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </li>
                   ))}
@@ -247,7 +293,6 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           const monthSubscriptions = getExpensesForMonth(filteredSubscriptions, index)
           const cellClasses = cn(
             'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
-            // 'focus:ring-2 focus:ring-primary',
             isCurrentMonth
               ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50'
               : 'bg-neutral-50 dark:bg-neutral-900',
