@@ -132,7 +132,12 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           ))}
           {days.map((day) => {
             const isToday = currentDate.getMonth() === today.getMonth() && day === today.getDate()
-            const daySubscriptions = getDaySubscriptions(filteredSubscriptions, day, currentDate.getMonth(), currentDate.getFullYear())
+            const daySubscriptions = getDaySubscriptions(
+              filteredSubscriptions,
+              day,
+              currentDate.getMonth(),
+              currentDate.getFullYear(),
+            )
             const hasSubscriptions = daySubscriptions.length > 0
             const dayTotal = hasSubscriptions
               ? calculateDailyExpense(daySubscriptions, day, currentDate.getMonth(), currentDate.getFullYear())
@@ -167,11 +172,21 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               Expenses for {months[currentDate.getMonth()]} {selectedDay}, {currentDate.getFullYear()}
             </h4>
             <ScrollArea className="mt-4 pr-4">
-              {getDaySubscriptions(filteredSubscriptions, selectedDay, currentDate.getMonth()).length === 0 ? (
+              {getDaySubscriptions(
+                filteredSubscriptions,
+                selectedDay,
+                currentDate.getMonth(),
+                currentDate.getFullYear(),
+              ).length === 0 ? (
                 <p>No expenses for this day.</p>
               ) : (
                 <ul className="space-y-4">
-                  {getDaySubscriptions(filteredSubscriptions, selectedDay, currentDate.getMonth()).map((sub) => (
+                  {getDaySubscriptions(
+                    filteredSubscriptions,
+                    selectedDay,
+                    currentDate.getMonth(),
+                    currentDate.getFullYear(),
+                  ).map((sub) => (
                     <li key={sub.id} className="flex items-center justify-between border-b pb-2">
                       <div>
                         <h3 className="font-medium">{sub.title}</h3>

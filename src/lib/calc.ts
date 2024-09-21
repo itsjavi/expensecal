@@ -95,7 +95,7 @@ export const getDaySubscriptions = (subscriptions: Subscription[], day: number, 
 export const calculateYearlyTotal = (subscriptions: Subscription[], year: number) => {
   return Array.from({ length: 12 }, (_, monthIndex) => monthIndex).reduce(
     (sum, monthIndex) => sum + calculateMonthlyTotal(subscriptions, monthIndex, year),
-    0
+    0,
   )
 }
 
