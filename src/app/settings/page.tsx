@@ -22,9 +22,9 @@ export default async function SettingsPage() {
     <div className="container mx-auto py-8 flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-4">Settings</h1>
       <SettingsForm
-        initialCurrency={user.currency ?? 'USD'} // Provide a default value if currency is null
-        initialMonthlyIncome={user.monthlyIncome}
-        initialMonthlyBudget={user.monthlyBudget}
+        initialCurrency={user.currency ?? 'USD'}
+        initialMonthlyIncome={user.monthlyIncome ?? undefined}
+        initialMonthlyBudget={user.monthlyBudget ?? undefined}
       />
     </div>
   )

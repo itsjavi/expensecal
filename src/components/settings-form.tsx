@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
+import { parseCurrency } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -31,8 +32,12 @@ export default function SettingsForm({
   initialMonthlyBudget?: number
 }) {
   const [currency, setCurrency] = useState(initialCurrency)
-  const [monthlyIncome, setMonthlyIncome] = useState(initialMonthlyIncome?.toString() ?? '')
-  const [monthlyBudget, setMonthlyBudget] = useState(initialMonthlyBudget?.toString() ?? '')
+  const [monthlyIncome, setMonthlyIncome] = useState(
+    initialMonthlyIncome ? (initialMonthlyIncome / 100).toFixed(2) : '',
+  )
+  const [monthlyBudget, setMonthlyBudget] = useState(
+    initialMonthlyBudget ? (initialMonthlyBudget / 100).toFixed(2) : '',
+  )
   const router = useRouter()
   const { toast } = useToast()
 
@@ -41,8 +46,8 @@ export default function SettingsForm({
     try {
       await updateUserSettings({
         currency,
-        monthlyIncome: monthlyIncome ? parseInt(monthlyIncome) : 0,
-        monthlyBudget: monthlyBudget ? parseInt(monthlyBudget) : 0,
+        monthlyIncome: parseCurrency(monthlyIncome) * 100, // Convert to cents
+        monthlyBudget: parseCurrency(monthlyBudget) * 100, // Convert to cents
       })
       toast({
         title: 'Settings updated',
@@ -93,6 +98,8 @@ export default function SettingsForm({
               <Input
                 id="monthlyIncome"
                 type="number"
+                step="0.01"
+                min="0"
                 value={monthlyIncome}
                 onChange={(e) => setMonthlyIncome(e.target.value)}
               />
@@ -102,6 +109,8 @@ export default function SettingsForm({
               <Input
                 id="monthlyBudget"
                 type="number"
+                step="0.01"
+                min="0"
                 value={monthlyBudget}
                 onChange={(e) => setMonthlyBudget(e.target.value)}
               />

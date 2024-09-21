@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { capitalizeFirstLetter } from '@/lib/utils'
 import { expenseCategories, type Subscription } from '@/models/schema'
 import { useEffect, useState } from 'react'
+import { parseCurrency } from '@/lib/utils'
 
 type EditExpenseDialogProps = {
   subscription: Subscription
@@ -29,7 +30,7 @@ type EditExpenseDialogProps = {
 
 export default function EditExpenseDialog({ subscription, open, onOpenChange }: EditExpenseDialogProps) {
   const [title, setTitle] = useState(subscription.title)
-  const [cost, setCost] = useState(subscription.cost.toString())
+  const [cost, setCost] = useState((subscription.cost / 100).toFixed(2))
   const [dayOfMonth, setDayOfMonth] = useState(subscription.dayOfMonth.toString())
   const [recurringType, setRecurringType] = useState(subscription.recurringType)
   const [category, setCategory] = useState(subscription.category)
@@ -40,7 +41,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
 
   useEffect(() => {
     setTitle(subscription.title)
-    setCost(subscription.cost.toString())
+    setCost((subscription.cost / 100).toFixed(2))
     setDayOfMonth(subscription.dayOfMonth.toString())
     setRecurringType(subscription.recurringType)
     setCategory(subscription.category)
@@ -53,7 +54,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     const formData = new FormData()
     formData.append('id', subscription.id.toString())
     formData.append('title', title)
-    formData.append('cost', cost)
+    formData.append('cost', (parseCurrency(cost) * 100).toString()) // Convert to cents
     formData.append('category', category)
     formData.append('dayOfMonth', dayOfMonth)
     formData.append('recurringType', recurringType)
@@ -97,7 +98,15 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
           </div>
           <div>
             <Label htmlFor="cost">Cost</Label>
-            <Input id="cost" type="number" value={cost} onChange={(e) => setCost(e.target.value)} required />
+            <Input
+              id="cost"
+              type="number"
+              step="0.01"
+              min="0"
+              value={cost}
+              onChange={(e) => setCost(e.target.value)}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="dayOfMonth">Day of Month</Label>

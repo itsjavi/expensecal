@@ -36,5 +36,11 @@ export function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
-  }).format(amount / 100) // Assuming the amount is stored in cents
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount / 100) // Convert cents to dollars
+}
+
+export function parseCurrency(value: string): number {
+  return parseFloat(value) || 0
 }

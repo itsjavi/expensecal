@@ -17,7 +17,14 @@ export async function updateUserSettings({
 }) {
   const session = await assureSessionWithUser()
 
-  await db.update(users).set({ currency, monthlyIncome, monthlyBudget }).where(eq(users.id, session.user.id))
+  await db
+    .update(users)
+    .set({
+      currency,
+      monthlyIncome: Math.round(monthlyIncome), // Ensure we're storing integers
+      monthlyBudget: Math.round(monthlyBudget), // Ensure we're storing integers
+    })
+    .where(eq(users.id, session.user.id))
   revalidatePath('/settings')
 }
 

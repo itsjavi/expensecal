@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { capitalizeFirstLetter } from '@/lib/utils'
 import { expenseCategories } from '@/models/schema'
 import { useState } from 'react'
+import { parseCurrency } from '@/lib/utils'
 
 type AddExpenseDialogProps = {
   open: boolean
@@ -17,7 +18,7 @@ type AddExpenseDialogProps = {
 
 export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) {
   const [title, setTitle] = useState('')
-  const [cost, setCost] = useState('100')
+  const [cost, setCost] = useState('1.00')
   const [dayOfMonth, setDayOfMonth] = useState('1')
   const [recurringType, setRecurringType] = useState('monthly')
   const [category, setCategory] = useState('subscriptions')
@@ -28,7 +29,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     e.preventDefault()
     const formData = new FormData()
     formData.append('title', title)
-    formData.append('cost', cost)
+    formData.append('cost', (parseCurrency(cost) * 100).toString()) // Convert to cents
     formData.append('category', category)
     formData.append('dayOfMonth', dayOfMonth)
     formData.append('recurringType', recurringType)
@@ -39,7 +40,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     onOpenChange(false)
     // Reset form fields
     setTitle('')
-    setCost('100')
+    setCost('1.00')
     setCategory('subscriptions')
     setDayOfMonth('1')
     setRecurringType('monthly')
@@ -75,7 +76,15 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
           </div>
           <div>
             <Label htmlFor="cost">Cost</Label>
-            <Input id="cost" type="number" value={cost} onChange={(e) => setCost(e.target.value)} required />
+            <Input
+              id="cost"
+              type="number"
+              step="0.01"
+              min="0"
+              value={cost}
+              onChange={(e) => setCost(e.target.value)}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="dayOfMonth">Day of Month</Label>
