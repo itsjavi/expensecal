@@ -10,6 +10,8 @@ export const users = pgTable('user', {
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
   currency: text('currency').default('USD'),
+  monthlyIncome: integer('monthlyIncome').default(0).notNull(),
+  monthlyBudget: integer('monthlyBudget').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })

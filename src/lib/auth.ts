@@ -85,6 +85,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 })
 
+export async function assureSessionWithUser() {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('You must be logged in to perform this action')
+  }
+
+  return session
+}
+
 // @see https://authjs.dev/getting-started/installation?framework=Next.js
 // in middleware.ts, add optional Middleware to keep the session alive, this will update the session expiry every time its called.
 // export { auth as middleware } from "@/auth"

@@ -1,16 +1,13 @@
 'use server'
 
-import { auth } from '@/lib/auth'
+import { assureSessionWithUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { subscriptions } from '@/models/schema'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
 export async function addSubscription(formData: FormData) {
-  const session = await auth()
-  if (!session?.user?.id) {
-    throw new Error('You must be logged in to add a subscription')
-  }
+  const session = await assureSessionWithUser()
 
   const title = formData.get('title') as string
   const category = formData.get('category') as string
@@ -36,10 +33,7 @@ export async function addSubscription(formData: FormData) {
 }
 
 export async function updateSubscription(formData: FormData) {
-  const session = await auth()
-  if (!session?.user?.id) {
-    throw new Error('You must be logged in to update a subscription')
-  }
+  await assureSessionWithUser()
 
   const id = parseInt(formData.get('id') as string, 10)
   const title = formData.get('title') as string
@@ -68,10 +62,7 @@ export async function updateSubscription(formData: FormData) {
 }
 
 export async function getSubscriptions() {
-  const session = await auth()
-  if (!session?.user?.id) {
-    return []
-  }
+  const session = await assureSessionWithUser()
 
   return db
     .select()
@@ -81,10 +72,7 @@ export async function getSubscriptions() {
 }
 
 export async function deleteSubscription(id: number) {
-  const session = await auth()
-  if (!session?.user?.id) {
-    throw new Error('You must be logged in to delete a subscription')
-  }
+  await assureSessionWithUser()
 
   await db.delete(subscriptions).where(eq(subscriptions.id, id))
   revalidatePath('/dashboard')

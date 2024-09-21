@@ -1,3 +1,4 @@
+import twTypography from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
 import twAnimate from 'tailwindcss-animate'
 
@@ -59,6 +60,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [twAnimate],
+  plugins: [twAnimate, twTypography],
 }
 export default config

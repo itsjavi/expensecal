@@ -1,6 +1,7 @@
 import { SignInButton } from '@/components/_prev/SignInButton'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { auth, providers } from '@/lib/auth'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 // @see https://authjs.dev/guides/pages/signin
@@ -25,8 +26,9 @@ export default async function SignIn() {
           ))}
         </CardContent>
         <CardFooter>
-          <p className="text-sm text-muted-foreground text-center w-full">
-            By signing in, you agree to our Terms of Service and Privacy Policy.
+          <p className="text-sm text-muted-foreground text-center w-full prose  dark:prose-invert prose-sm">
+            By signing in, you agree to our <Link href="/terms-and-conditions">Terms of Service</Link> and{' '}
+            <Link href="/privacy-policy">Privacy Policy</Link>.
           </p>
         </CardFooter>
       </Card>

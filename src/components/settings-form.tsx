@@ -1,27 +1,73 @@
 'use client'
 
+import { deleteUser, updateUserSettings } from '@/app/actions/user'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function SettingsForm() {
-  const [currency, setCurrency] = useState('USD')
-  const [monthlyIncome, setMonthlyIncome] = useState('')
-  const [monthlyBudget, setMonthlyBudget] = useState('')
+export default function SettingsForm({
+  initialCurrency,
+  initialMonthlyIncome,
+  initialMonthlyBudget,
+}: {
+  initialCurrency: string
+  initialMonthlyIncome?: number
+  initialMonthlyBudget?: number
+}) {
+  const [currency, setCurrency] = useState(initialCurrency)
+  const [monthlyIncome, setMonthlyIncome] = useState(initialMonthlyIncome?.toString() ?? '')
+  const [monthlyBudget, setMonthlyBudget] = useState(initialMonthlyBudget?.toString() ?? '')
+  const router = useRouter()
+  const { toast } = useToast()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Implement settings update logic here
+    try {
+      await updateUserSettings({
+        currency,
+        monthlyIncome: monthlyIncome ? parseInt(monthlyIncome) : 0,
+        monthlyBudget: monthlyBudget ? parseInt(monthlyBudget) : 0,
+      })
+      toast({
+        title: 'Settings updated',
+        description: 'Your settings have been successfully saved.',
+      })
+      router.refresh()
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update settings. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleDeleteAccount = async () => {
+    await deleteUser()
+    router.push('/') // Redirect to home page after account deletion
   }
 
   const currencies = Intl.supportedValuesOf('currency')
 
   return (
-    <div className="flex flex-col gap-4">
-      <Card className="max-w-md">
+    <div className="flex flex-col gap-4 w-[500px] max-w-full">
+      <Card className="max-w-lg">
         <CardHeader>
           <CardTitle>User Settings</CardTitle>
         </CardHeader>
@@ -69,10 +115,27 @@ export default function SettingsForm() {
         </CardFooter>
       </Card>
 
-      <div>
-        <Button variant="link" size="sm" className="border-destructive text-sm text-muted-foreground">
-          Delete Account
-        </Button>
+      <div className="flex justify-start">
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="link" size="sm" className="border-destructive text-sm text-muted-foreground">
+              Delete Account
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteAccount}>Delete Account</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   )
