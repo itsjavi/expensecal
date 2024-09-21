@@ -1,4 +1,4 @@
-import { SignInButton } from '@/components/_prev/SignInButton'
+import { SignInButton } from '@/components/signin-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { auth, providers } from '@/lib/auth'
 import Link from 'next/link'

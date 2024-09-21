@@ -35,7 +35,7 @@ export async function addSubscription(formData: FormData) {
 export async function updateSubscription(formData: FormData) {
   await assureSessionWithUser()
 
-  const id = parseInt(formData.get('id') as string, 10)
+  const id = formData.get('id') as string
   const title = formData.get('title') as string
   const category = formData.get('category') as string
   const cost = parseInt(formData.get('cost') as string, 10)
@@ -71,7 +71,7 @@ export async function getSubscriptions() {
     .orderBy(subscriptions.category, subscriptions.startingMonth, subscriptions.dayOfMonth)
 }
 
-export async function deleteSubscription(id: number) {
+export async function deleteSubscription(id: string) {
   await assureSessionWithUser()
 
   await db.delete(subscriptions).where(eq(subscriptions.id, id))
