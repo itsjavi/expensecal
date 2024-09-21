@@ -1,4 +1,4 @@
-import { boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, integer, pgEnum, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from 'next-auth/adapters'
 
 export const users = pgTable('user', {
@@ -109,7 +109,9 @@ export type ExpenseCategory = (typeof expenseCategories)[number]
 export const expenseCategoryEnum = pgEnum('expense_category', expenseCategories)
 
 export const subscriptions = pgTable('subscription', {
-  id: serial('id').primaryKey(),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
