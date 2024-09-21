@@ -25,19 +25,26 @@ export default async function Dashboard() {
     .limit(1)
     .then((rows) => rows[0])
 
-  if (!user) throw new Error('User not found')
+  if (!user) {
+    console.error('User not found', session.user.id)
+    redirect('/api/auth/signin')
+  }
+
+  const hasSubscriptions = subscriptions.length > 0
 
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">My Dashboard</h1>
-      <div className="mb-8">
-        <DashboardMetrics
-          subscriptions={subscriptions}
-          currency={session.user.currency}
-          monthlyIncome={user.monthlyIncome ?? 0}
-          monthlyBudget={user.monthlyBudget ?? 0}
-        />
-      </div>
+      {hasSubscriptions && (
+        <div className="mb-8">
+          <DashboardMetrics
+            subscriptions={subscriptions}
+            currency={session.user.currency}
+            monthlyIncome={user.monthlyIncome ?? 0}
+            monthlyBudget={user.monthlyBudget ?? 0}
+          />
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8 min-h-[300px]">
         <div className="lg:col-span-2">
           <ExpenseList subscriptions={subscriptions} currency={session.user.currency} />

@@ -173,8 +173,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete the subscription and remove it from our
-                    servers.
+                    This action cannot be undone. This will permanently delete the expense data from all calculations.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
