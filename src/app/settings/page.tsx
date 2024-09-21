@@ -23,8 +23,8 @@ export default async function SettingsPage() {
       <h1 className="text-2xl font-bold mb-4">Settings</h1>
       <SettingsForm
         initialCurrency={user.currency ?? 'USD'}
-        initialMonthlyIncome={user.monthlyIncome ?? undefined}
-        initialMonthlyBudget={user.monthlyBudget ?? undefined}
+        initialMonthlyIncome={user.monthlyIncome ?? 0}
+        initialMonthlyBudget={user.monthlyBudget ?? 0}
       />
     </div>
   )

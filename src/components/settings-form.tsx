@@ -33,10 +33,10 @@ export default function SettingsForm({
 }) {
   const [currency, setCurrency] = useState(initialCurrency)
   const [monthlyIncome, setMonthlyIncome] = useState(
-    initialMonthlyIncome ? (initialMonthlyIncome / 100).toFixed(2) : '',
+    initialMonthlyIncome ? (initialMonthlyIncome / 100).toFixed(2) : '0.00',
   )
   const [monthlyBudget, setMonthlyBudget] = useState(
-    initialMonthlyBudget ? (initialMonthlyBudget / 100).toFixed(2) : '',
+    initialMonthlyBudget ? (initialMonthlyBudget / 100).toFixed(2) : '0.00',
   )
   const router = useRouter()
   const { toast } = useToast()
