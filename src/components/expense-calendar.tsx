@@ -311,6 +311,10 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
     </div>
   )
 
+  const hasNoExpenses = subscriptions.length === 0
+  const hasFilteredExpenses = filteredSubscriptions.length > 0
+  const hasNoFilteredExpenses = !hasFilteredExpenses
+
   return (
     <Card>
       <CardHeader>
@@ -342,12 +346,9 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {subscriptions.length === 0 ? <p>Add some expenses to see your expense calendar.</p> : cardContent}
-        {subscriptions.length > 0 && filteredSubscriptions.length === 0 ? (
-          <p>No expenses found for the selected category.</p>
-        ) : (
-          cardContent
-        )}
+        {hasNoExpenses ? <p>Add some expenses to see your expense calendar.</p> : cardContent}
+        {hasNoFilteredExpenses ? <p>No expenses found for the selected category.</p> : cardContent}
+        {hasFilteredExpenses && cardContent}
       </CardContent>
     </Card>
   )
