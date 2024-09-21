@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteSubscription, updateSubscription } from '@/app/actions/subscriptions'
+import { deleteTransaction, updateTransaction } from '@/app/actions/transactions'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,12 +60,12 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     formData.append('customRecurringMonths', customRecurringMonths)
     formData.append('startingMonth', startingMonth)
 
-    await updateSubscription(formData)
+    await updateTransaction(formData)
     onOpenChange(false)
   }
 
   const handleDelete = async () => {
-    await deleteSubscription(subscription.id)
+    await deleteTransaction(subscription.id)
     onOpenChange(false)
   }
 

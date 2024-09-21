@@ -10,7 +10,7 @@ import {
   calculateYearlyTotal,
   getDaySubscriptions,
   getDaysCountInMonth,
-  getSubscriptionsForMonth,
+  getExpensesForMonth,
 } from '@/lib/calc'
 import { cn, formatCurrency } from '@/lib/utils'
 import { type Transaction } from '@/models/schema'
@@ -244,7 +244,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         {months.map((month, index) => {
           const isCurrentMonth = index === today.getMonth() && currentDate.getFullYear() === today.getFullYear()
           const monthlyTotal = calculateMonthlyTotal(filteredSubscriptions, index, currentDate.getFullYear())
-          const monthSubscriptions = getSubscriptionsForMonth(filteredSubscriptions, index)
+          const monthSubscriptions = getExpensesForMonth(filteredSubscriptions, index)
           const cellClasses = cn(
             'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
             // 'focus:ring-2 focus:ring-primary',

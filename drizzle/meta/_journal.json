@@ -57,6 +57,13 @@
       "when": 1726940821490,
       "tag": "0007_overrated_wiccan",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1726942199876,
+      "tag": "0008_early_nocturne",
+      "breakpoints": true
     }
   ]
 }

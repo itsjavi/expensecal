@@ -60,7 +60,7 @@ export const calculateMonthlyTotal = (subscriptions: Transaction[], monthIndex: 
   return total
 }
 
-export const getSubscriptionsForMonth = (subscriptions: Transaction[], monthIndex: number) => {
+export const getExpensesForMonth = (subscriptions: Transaction[], monthIndex: number) => {
   return subscriptions.filter((sub) => {
     const startMonth = sub.startingMonth || 0
     return monthIndex >= startMonth

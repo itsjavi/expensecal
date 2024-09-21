@@ -1,15 +1,14 @@
 'use client'
 
-import { addSubscription } from '@/app/actions/subscriptions'
+import { addTransaction } from '@/app/actions/transactions'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { capitalizeFirstLetter } from '@/lib/utils'
+import { capitalizeFirstLetter, parseCurrency } from '@/lib/utils'
 import { expenseCategories } from '@/models/schema'
 import { useState } from 'react'
-import { parseCurrency } from '@/lib/utils'
 
 type AddExpenseDialogProps = {
   open: boolean
@@ -36,7 +35,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     formData.append('customRecurringMonths', customRecurringMonths)
     formData.append('startingMonth', startingMonth)
 
-    await addSubscription(formData)
+    await addTransaction(formData)
     onOpenChange(false)
     // Reset form fields
     setTitle('')

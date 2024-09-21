@@ -93,6 +93,10 @@ export const recurringTypes = ['one-time', 'weekly', 'fortnightly', 'monthly', '
 export type RecurringType = (typeof recurringTypes)[number]
 export const recurringTypeEnum = pgEnum('recurring_type', recurringTypes)
 
+export const transactionTypes = ['expense', 'income'] as const
+export type TransactionType = (typeof transactionTypes)[number]
+export const transactionTypeEnum = pgEnum('transaction_type', transactionTypes)
+
 export const expenseCategories = [
   'housing',
   'utilities',
@@ -103,6 +107,8 @@ export const expenseCategories = [
   'subscriptions',
   'lifestyle',
   'investments',
+  // 'revenue', // TODO support in the future, to add revenues/incomes in the settings page or another one
+  // 'income',
   'other',
 ] as const
 export type ExpenseCategory = (typeof expenseCategories)[number]
@@ -119,6 +125,7 @@ export const transactions = pgTable('transaction', {
   logo: text('logo'),
   amount: integer('amount').notNull(),
   category: expenseCategoryEnum('category').default('other').notNull(),
+  transactionType: transactionTypeEnum('transaction_type').default('expense').notNull(),
 
   // recurring options:
   recurringType: recurringTypeEnum('recurring_type').default('monthly').notNull(),

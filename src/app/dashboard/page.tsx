@@ -1,4 +1,4 @@
-import { getSubscriptions } from '@/app/actions/subscriptions'
+import { getExpenses } from '@/app/actions/transactions'
 import { DashboardMetrics } from '@/components/dashboard-metrics'
 import ExpenseCalendar from '@/components/expense-calendar'
 import ExpenseCharts from '@/components/expense-charts'
@@ -16,7 +16,7 @@ export default async function Dashboard() {
     redirect('/api/auth/signin')
   }
 
-  const subscriptions = await getSubscriptions()
+  const subscriptions = await getExpenses()
 
   const user = await db
     .select()
