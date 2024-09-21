@@ -346,8 +346,8 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {hasNoExpenses ? <p>Add some expenses to see your expense calendar.</p> : cardContent}
-        {hasExpensesButNoFilteredExpenses ? <p>No expenses found for the selected category.</p> : cardContent}
+        {hasNoExpenses ? <p>Add some expenses to see your expense calendar.</p> : ''}
+        {hasExpensesButNoFilteredExpenses ? <p>No expenses found for the selected category.</p> : ''}
         {hasFilteredExpenses && cardContent}
       </CardContent>
     </Card>
