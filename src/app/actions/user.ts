@@ -1,6 +1,6 @@
 'use server'
 
-import { assureSessionWithUser } from '@/lib/auth'
+import { assureSessionWithUser, signOut } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { users } from '@/models/schema'
 import { eq } from 'drizzle-orm'
@@ -32,6 +32,8 @@ export async function deleteUser() {
   const session = await assureSessionWithUser()
 
   await db.delete(users).where(eq(users.id, session.user.id))
+  await signOut()
   // Note: You might want to add logic here to delete related data (subscriptions, etc.)
   revalidatePath('/')
+  revalidatePath('/settings')
 }
