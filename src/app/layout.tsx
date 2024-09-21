@@ -1,6 +1,6 @@
-import BaseLayout from '@/components/BaseLayout'
+import BaseLayout from '@/components/base-layout'
+import Providers from '@/components/providers'
 import { auth } from '@/lib/auth'
-import { SessionProvider } from 'next-auth/react'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -15,11 +15,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const session = await auth()
 
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SessionProvider session={session}>
-          <BaseLayout>{children}</BaseLayout>
-        </SessionProvider>
+        <Providers session={session}>
+          <BaseLayout session={session}>{children}</BaseLayout>
+        </Providers>
       </body>
     </html>
   )

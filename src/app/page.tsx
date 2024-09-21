@@ -1,20 +1,31 @@
+import { Button } from '@/components/ui/button'
+import { auth } from '@/lib/auth'
+import { MotionDiv } from '@/lib/framer'
 import Link from 'next/link'
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth()
+
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content text-center">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl font-bold">Are you really aware of how many subscriptions you have?</h1>
-          <p className="py-6">
-            Get an overview of your monthly and yearly expenses and see where your money goes. Start tracking your
-            expenses today!
-          </p>
-          <Link href="/dashboard" className="btn btn-primary">
-            Get Started
+    <div className="container mx-auto px-4 py-16">
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center"
+      >
+        <h1 className="text-4xl font-bold mb-6">Are you aware of how many subscriptions you have?</h1>
+        <p className="text-xl mb-8">Track your expenses with ease, and get clear monthly and yearly overviews.</p>
+        {session ? (
+          <Link href="/dashboard">
+            <Button size="lg">Go to Dashboard</Button>
           </Link>
-        </div>
-      </div>
+        ) : (
+          <Link href="/api/auth/signin">
+            <Button size="lg">Get Started</Button>
+          </Link>
+        )}
+      </MotionDiv>
     </div>
   )
 }

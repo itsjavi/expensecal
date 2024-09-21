@@ -1,4 +1,3 @@
-// import daisyui from 'daisyui'
 import type { Config } from 'tailwindcss'
 import twAnimate from 'tailwindcss-animate'
 
@@ -61,8 +60,5 @@ const config: Config = {
     },
   },
   plugins: [twAnimate],
-  // daisyui: {
-  //   themes: ['dark', 'light'],
-  // },
 }
 export default config

@@ -22,6 +22,13 @@
       "when": 1726866362858,
       "tag": "0002_slow_skullbuster",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1726880823741,
+      "tag": "0003_yielding_george_stacy",
+      "breakpoints": true
     }
   ]
 }

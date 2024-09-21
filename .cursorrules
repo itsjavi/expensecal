@@ -1,25 +1,33 @@
-This project is a Next.js app that allows you to calculate how much do you spend on subscriptions every month.
-It's an overview of your yearly expenses, to see where your money goes. 
+This project is a Next.js SaaS app that allows you to calculate how much do you spend every month. It's an overview of
+your monthly/yearly expenses, to see where your money goes.
 
 Technically, it follows these rules:
 
 - Next.js 14 App Router + src folder
-- Daisy UI for the UI
-- Tailwind CSS for any other styling not covered by Daisy UI
-- Drizzle ORM for the database (PostgreSQL)
-- NextAuth for the authentication (using Auth.js and Next Auth v5 beta).
+- shadcn/ui components for the UI
+- Framer Motion for animations (where makes sense)
+- Tailwind CSS for any other styling not covered by shadcn/ui
+- Drizzle ORM for the database (PostgreSQL, Neon)
+- next-auth for the authentication (using Auth.js and next-auth v5 beta).
 - To get the current session server-side we use the auth() function from '@/lib/auth'.
 - Users are logged in via oauth. For now we only allow Github.
-- Schemas live under src/models/schema.ts
-- Use server actions over API routes/calls. Remember to add the "use server" directive at the top of the file 
-containing the server actions, and to verify the user is logged in.
+- Schemas and their types live under src/models/schema.ts
+- Use server actions over API routes/calls. Remember to add the "use server" directive at the top of the file containing
+  the server actions, and to verify the user is logged in.
 - Use React Server Components where possible.
-- Use Client Components if hooks or user interactions are needed. Remember to add the "use client" directive at 
-the top of the file.
+- Use Client Components if hooks or user interactions are needed. Remember to add the "use client" directive at the top
+  of the file.
+- next-themes for the theme management
+- Use kebab-case for the file names instead of CamelCase.
+- Use signle-quoted strings, and templates instead of concatenation.
 
 The app features the following:
 
-- A sleek, minimalistic, responsive modern design. Default theme is dark.
-- A calendar view of your expenses for the current month or year (can be changed)
-- A form to add/edit/delete services (expenses)
-- A dashboard that lists your services (expenses), shows the calendar view(s), and charts in the future
+- A sleek, mobile-friendly, modern design using New York theme from shadcn/ui.
+- A calendar view of your expenses for the current month or year (can be switched).
+- A form to add/edit/delete expenses.
+- Expense categories are: Housing, Utilities, Food, Transportation, Insurances, Health, Subscriptions, Lifestyle,
+  Investments, Other.
+- A dashboard that lists your expenses, shows the calendar view(s), and pie charts.
+- Users have a settings page to change their currency, monthly income (optional), monthly budget (optional), and delete
+  their account.

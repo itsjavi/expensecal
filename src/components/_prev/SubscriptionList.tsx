@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteSubscription, updateSubscription } from '@/app/actions/subscriptions'
+import { deleteSubscription } from '@/app/actions/subscriptions'
 import { formatCurrency } from '@/lib/utils'
 import type { Subscription } from '@/models/schema'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -32,21 +32,21 @@ export default function SubscriptionList({
   const [editingRecurringType, setEditingRecurringType] = useState<string>('monthly')
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
-  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>, id: number) => {
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>, _id: number) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    await updateSubscription(id, {
-      title: formData.get('title') as string,
-      logo: formData.get('logo') as string,
-      cost: parseFloat(formData.get('cost') as string),
-      dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
-      recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
-      customRecurringMonths:
-        formData.get('recurringType') === 'custom'
-          ? parseInt(formData.get('customRecurringMonths') as string)
-          : undefined,
-      startingMonth: parseInt(formData.get('startingMonth') as string),
-    })
+    // const formData = new FormData(event.currentTarget)
+    // await updateSubscription(id, {
+    //   title: formData.get('title') as string,
+    //   logo: formData.get('logo') as string,
+    //   cost: parseFloat(formData.get('cost') as string),
+    //   dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
+    //   recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
+    //   customRecurringMonths:
+    //     formData.get('recurringType') === 'custom'
+    //       ? parseInt(formData.get('customRecurringMonths') as string)
+    //       : undefined,
+    //   startingMonth: parseInt(formData.get('startingMonth') as string),
+    // })
     setEditingId(null)
   }
 

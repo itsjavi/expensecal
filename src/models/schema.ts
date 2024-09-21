@@ -88,6 +88,18 @@ export const authenticators = pgTable(
 )
 
 export const recurringTypeEnum = pgEnum('recurring_type', ['weekly', 'fortnightly', 'monthly', 'yearly', 'custom'])
+export const expenseCategoryEnum = pgEnum('expense_category', [
+  'housing',
+  'utilities',
+  'food',
+  'transportation',
+  'insurances',
+  'health',
+  'subscriptions',
+  'lifestyle',
+  'investments',
+  'other',
+])
 
 export const subscriptions = pgTable('subscription', {
   id: serial('id').primaryKey(),
@@ -101,6 +113,7 @@ export const subscriptions = pgTable('subscription', {
   recurringType: recurringTypeEnum('recurring_type').default('monthly').notNull(),
   customRecurringMonths: integer('custom_recurring_months'),
   startingMonth: integer('starting_month').default(0).notNull(), // 0 for January, 11 for December
+  category: expenseCategoryEnum('category').default('other').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })

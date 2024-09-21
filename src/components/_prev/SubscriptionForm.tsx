@@ -1,6 +1,5 @@
 'use client'
 
-import { addSubscription } from '@/app/actions/subscriptions'
 import { useState } from 'react'
 
 const months = [
@@ -24,19 +23,19 @@ export default function SubscriptionForm({ currency }: { currency: string }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    await addSubscription({
-      title: formData.get('title') as string,
-      logo: formData.get('logo') as string,
-      cost: parseFloat(formData.get('cost') as string),
-      dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
-      recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
-      startingMonth: parseInt(formData.get('startingMonth') as string),
-      customRecurringMonths:
-        formData.get('recurringType') === 'custom'
-          ? parseInt(formData.get('customRecurringMonths') as string)
-          : undefined,
-    })
+    // const formData = new FormData(event.currentTarget)
+    // await addSubscription({
+    //   title: formData.get('title') as string,
+    //   logo: formData.get('logo') as string,
+    //   cost: parseFloat(formData.get('cost') as string),
+    //   dayOfMonth: parseInt(formData.get('dayOfMonth') as string),
+    //   recurringType: formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom',
+    //   startingMonth: parseInt(formData.get('startingMonth') as string),
+    //   customRecurringMonths:
+    //     formData.get('recurringType') === 'custom'
+    //       ? parseInt(formData.get('customRecurringMonths') as string)
+    //       : undefined,
+    // })
     setIsOpen(false)
   }
 

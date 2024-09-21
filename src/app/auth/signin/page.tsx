@@ -1,6 +1,9 @@
-import { SignInButton } from '@/components/SignInButton'
+import { SignInButton } from '@/components/_prev/SignInButton'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { auth, providers } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+
+// @see https://authjs.dev/guides/pages/signin
 
 export default async function SignIn() {
   const session = await auth()
@@ -10,15 +13,23 @@ export default async function SignIn() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-200">
-      <div className="max-w-md w-full space-y-8 p-10 bg-base-100 rounded-xl shadow-md">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold">Sign in to your account</h2>
-        </div>
-        {providers.map((provider) => (
-          <SignInButton key={provider.id} providerId={provider.id} providerName={provider.name} />
-        ))}
-      </div>
+    <div className="flex-grow flex justify-center items-center self-center">
+      <Card className="w-[350px]">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Sign in to your account</CardTitle>
+          <CardDescription>Sign in to your account to access your expense tracker</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          {providers.map((provider) => (
+            <SignInButton key={provider.id} providerId={provider.id} providerName={provider.name} />
+          ))}
+        </CardContent>
+        <CardFooter>
+          <p className="text-sm text-muted-foreground text-center w-full">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   )
 }
