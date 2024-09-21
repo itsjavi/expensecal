@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { capitalizeFirstLetter, parseCurrency } from '@/lib/utils'
 import { expenseCategories, type Transaction } from '@/models/schema'
 import { useEffect, useState } from 'react'
+import { BrandLogoField } from './brand-logo-field'
 
 type EditExpenseDialogProps = {
   subscription: Transaction
@@ -37,6 +38,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     subscription.monthlyCustomRecurringMonths?.toString() || '',
   )
   const [startingMonth, setStartingMonth] = useState(subscription.startingMonth.toString())
+  const [logo, setLogo] = useState(subscription.logo || '')
 
   useEffect(() => {
     setTitle(subscription.title)
@@ -46,6 +48,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     setCategory(subscription.category)
     setCustomRecurringMonths(subscription.monthlyCustomRecurringMonths?.toString() || '')
     setStartingMonth(subscription.startingMonth.toString())
+    setLogo(subscription.logo || '')
   }, [subscription])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,6 +62,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     formData.append('recurringType', recurringType)
     formData.append('customRecurringMonths', customRecurringMonths)
     formData.append('startingMonth', startingMonth)
+    formData.append('logo', logo)
 
     await updateTransaction(formData)
     onOpenChange(false)
@@ -69,9 +73,17 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     onOpenChange(false)
   }
 
+  const handleLogoSelect = (selectedLogo: string) => {
+    setLogo(selectedLogo)
+  }
+
+  const clearLogo = () => {
+    setLogo('')
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Expense</DialogTitle>
         </DialogHeader>
@@ -80,6 +92,12 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
             <Label htmlFor="title">Title</Label>
             <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
+          <BrandLogoField
+            initialSearchValue={subscription.title}
+            currentLogoUrl={logo}
+            onClear={clearLogo}
+            onSelect={handleLogoSelect}
+          />
           <div>
             <Label htmlFor="category">Category</Label>
             <Select value={category} onValueChange={(value) => setCategory(value as any)}>
@@ -96,7 +114,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
             </Select>
           </div>
           <div>
-            <Label htmlFor="cost">Cost</Label>
+            <Label htmlFor="cost">Amount</Label>
             <Input
               id="cost"
               type="number"
@@ -136,7 +154,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
           </div>
           {recurringType === 'custom' && (
             <div>
-              <Label htmlFor="customRecurringMonths">Custom Recurring Months</Label>
+              <Label htmlFor="customRecurringMonths">Repeats every X months:</Label>
               <Input
                 id="customRecurringMonths"
                 type="number"

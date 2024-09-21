@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCurrency } from '@/lib/utils'
 import { type Transaction } from '@/models/schema'
 import { DownloadIcon, Pencil } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 import AddExpenseDialog from './add-expense-dialog'
 import EditExpenseDialog from './edit-expense-dialog'
@@ -52,10 +53,17 @@ export default function ExpenseList({ subscriptions, currency }: ExpenseListProp
                   }`}
                 >
                   <div>
-                    <h3 className="font-medium">{sub.title}</h3>
-                    <p className="text-sm text-gray-500">
-                      {formatCurrency(sub.amount, currency)} / {sub.recurringType}
-                    </p>
+                    <div className="flex items-center space-x-4 font-medium">
+                      {sub.logo && (
+                        <Image src={sub.logo} alt={sub.title} width={32} height={32} className="rounded-full" />
+                      )}
+                      <div>
+                        <div className="font-medium">{sub.title}</div>
+                        <div className="text-sm text-gray-500">
+                          {formatCurrency(sub.amount, currency)} / {sub.recurringType}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => setEditingSubscription(sub)}>
                     <Pencil className="h-4 w-4 mr-2" />

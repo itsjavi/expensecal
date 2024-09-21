@@ -17,6 +17,7 @@ export async function addTransaction(formData: FormData) {
   const monthlyCustomRecurringMonths =
     recurringType === 'custom' ? parseInt(formData.get('customRecurringMonths') as string, 10) : null
   const startingMonth = parseInt(formData.get('startingMonth') as string, 10)
+  const logo = formData.get('logo') as string
 
   await db.insert(transactions).values({
     userId: session.user.id,
@@ -27,6 +28,7 @@ export async function addTransaction(formData: FormData) {
     recurringType,
     monthlyCustomRecurringMonths,
     startingMonth,
+    logo,
   })
 
   revalidatePath('/dashboard')
@@ -44,6 +46,7 @@ export async function updateTransaction(formData: FormData) {
   const monthlyCustomRecurringMonths =
     recurringType === 'custom' ? parseInt(formData.get('customRecurringMonths') as string, 10) : null
   const startingMonth = parseInt(formData.get('startingMonth') as string, 10)
+  const logo = formData.get('logo') as string
 
   await db
     .update(transactions)
@@ -55,6 +58,7 @@ export async function updateTransaction(formData: FormData) {
       recurringType,
       monthlyCustomRecurringMonths,
       startingMonth,
+      logo,
     })
     .where(eq(transactions.id, id))
 

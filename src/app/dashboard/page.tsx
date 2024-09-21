@@ -1,4 +1,5 @@
 import { getExpenses } from '@/app/actions/transactions'
+import { BrandLogoSearch } from '@/components/brand-logo-search'
 import { DashboardMetrics } from '@/components/dashboard-metrics'
 import ExpenseCalendar from '@/components/expense-calendar'
 import ExpenseCharts from '@/components/expense-charts'
@@ -8,7 +9,6 @@ import { db } from '@/lib/db'
 import { users } from '@/models/schema'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
-
 export default async function Dashboard() {
   const session = await auth()
 
@@ -35,6 +35,7 @@ export default async function Dashboard() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">My Dashboard</h1>
+      <BrandLogoSearch placeholder="Search for a service" initialValue="Netflix" />
       {hasSubscriptions && (
         <div className="mb-8">
           <DashboardMetrics

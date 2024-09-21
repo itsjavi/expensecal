@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { capitalizeFirstLetter, parseCurrency } from '@/lib/utils'
 import { expenseCategories } from '@/models/schema'
 import { useState } from 'react'
+import { BrandLogoField } from './brand-logo-field'
 
 type AddExpenseDialogProps = {
   open: boolean
@@ -23,6 +24,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
   const [category, setCategory] = useState('subscriptions')
   const [customRecurringMonths, setCustomRecurringMonths] = useState('')
   const [startingMonth, setStartingMonth] = useState('0')
+  const [logo, setLogo] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,10 +36,14 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     formData.append('recurringType', recurringType)
     formData.append('customRecurringMonths', customRecurringMonths)
     formData.append('startingMonth', startingMonth)
+    formData.append('logo', logo) // Add the logo URL
 
     await addTransaction(formData)
     onOpenChange(false)
-    // Reset form fields
+    resetForm()
+  }
+
+  const resetForm = () => {
     setTitle('')
     setCost('1.00')
     setCategory('subscriptions')
@@ -45,11 +51,20 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     setRecurringType('monthly')
     setCustomRecurringMonths('')
     setStartingMonth('0')
+    setLogo('')
+  }
+
+  const handleLogoSelect = (selectedLogo: string) => {
+    setLogo(selectedLogo)
+  }
+
+  const clearLogo = () => {
+    setLogo('')
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Expense</DialogTitle>
         </DialogHeader>
@@ -58,6 +73,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
             <Label htmlFor="title">Title</Label>
             <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
+          <BrandLogoField currentLogoUrl={logo} onClear={clearLogo} onSelect={handleLogoSelect} />
           <div>
             <Label htmlFor="category">Category</Label>
             <Select value={category} onValueChange={(value) => setCategory(value as any)}>
@@ -74,7 +90,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
             </Select>
           </div>
           <div>
-            <Label htmlFor="cost">Cost</Label>
+            <Label htmlFor="cost">Amount</Label>
             <Input
               id="cost"
               type="number"
@@ -92,8 +108,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
               type="number"
               min="1"
               max="31"
-              defaultValue="1"
-              value={dayOfMonth}
+              value={dayOfMonth || '1'}
               onChange={(e) => setDayOfMonth(e.target.value)}
               required
             />
@@ -115,7 +130,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
           </div>
           {recurringType === 'custom' && (
             <div>
-              <Label htmlFor="customRecurringMonths">Custom Recurring Months</Label>
+              <Label htmlFor="customRecurringMonths">Repeats every X months:</Label>
               <Input
                 id="customRecurringMonths"
                 type="number"

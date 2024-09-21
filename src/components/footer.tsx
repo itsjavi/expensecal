@@ -18,7 +18,18 @@ export default function Footer() {
               >
                 Javier Aguilar
               </a>
-              . <span className="block md:inline">All rights reserved.</span>
+              .{' '}
+              <span className="block md:inline">
+                All rights reserved.{' '}
+                <a
+                  href="https://brandfetch.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium italic hover:underline"
+                >
+                  Logos by Brandfetch.
+                </a>
+              </span>
             </p>
           </div>
           <nav className="flex space-x-4 text-sm">
