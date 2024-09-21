@@ -1,18 +1,17 @@
-import { Button } from '@/components/ui/button'
-import { signIn } from '@/lib/auth'
+'use client'
 
-export function SignInButton({ providerId, providerName }: { providerId: string; providerName: string }) {
+import { Button } from '@/components/ui/button'
+import { signIn } from 'next-auth/react'
+
+interface SignInButtonProps {
+  providerId: string
+  providerName: string
+}
+
+export function SignInButton({ providerId, providerName }: SignInButtonProps) {
   return (
-    <form
-      action={async () => {
-        'use server'
-        await signIn(providerId, { redirectTo: '/dashboard' })
-      }}
-    >
-      <Button variant="outline" className="w-full" type="submit">
-        {/* <Github className="mr-2 h-4 w-4" /> */}
-        Sign in with {providerName}
-      </Button>
-    </form>
+    <Button variant="outline" onClick={() => signIn(providerId)}>
+      Sign in with {providerName}
+    </Button>
   )
 }
