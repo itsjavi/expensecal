@@ -209,7 +209,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               ).length === 0 ? (
                 <p>No expenses for this day.</p>
               ) : (
-                <ul className="space-y-4 [&_li:last-child]:border-b-0">
+                <ul className="space-y-4">
                   {getDaySubscriptions(
                     filteredSubscriptions,
                     selectedDay,
@@ -365,7 +365,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
       <CardFooter>
         <ExportButton
           href={`/api/export/${isMonthlyView ? 'monthly' : 'yearly'}?year=${currentDate.getFullYear()}${isMonthlyView ? `&month=${currentDate.getMonth()}` : ''}`}
-          label={`Export ${isMonthlyView ? 'Monthly' : 'Yearly'} Expenses`}
+          label={`Export Expenses for the current ${isMonthlyView ? 'Month' : 'Year'}`}
         />
       </CardFooter>
     </Card>
