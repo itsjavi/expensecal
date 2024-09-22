@@ -18,11 +18,11 @@ type AddExpenseDialogProps = {
 
 export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) {
   const [title, setTitle] = useState('')
-  const [cost, setCost] = useState('1.00')
+  const [amount, setAmount] = useState('1.00')
   const [dayOfMonth, setDayOfMonth] = useState('1')
   const [recurringType, setRecurringType] = useState('monthly')
   const [category, setCategory] = useState('subscriptions')
-  const [customRecurringMonths, setCustomRecurringMonths] = useState('')
+  const [customRecurringMonths, setCustomRecurringMonths] = useState('0')
   const [startingMonth, setStartingMonth] = useState('0')
   const [logo, setLogo] = useState('')
 
@@ -30,7 +30,7 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
     e.preventDefault()
     const formData = new FormData()
     formData.append('title', title)
-    formData.append('cost', (parseCurrency(cost) * 100).toString()) // Convert to cents
+    formData.append('amount', (parseCurrency(amount) * 100).toString()) // Convert to cents
     formData.append('category', category)
     formData.append('dayOfMonth', dayOfMonth)
     formData.append('recurringType', recurringType)
@@ -45,11 +45,11 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
 
   const resetForm = () => {
     setTitle('')
-    setCost('1.00')
+    setAmount('1.00')
     setCategory('subscriptions')
     setDayOfMonth('1')
     setRecurringType('monthly')
-    setCustomRecurringMonths('')
+    setCustomRecurringMonths('0')
     setStartingMonth('0')
     setLogo('')
   }
@@ -90,14 +90,14 @@ export default function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialo
             </Select>
           </div>
           <div>
-            <Label htmlFor="cost">Amount</Label>
+            <Label htmlFor="amount">Amount</Label>
             <Input
-              id="cost"
+              id="amount"
               type="number"
               step="0.01"
               min="0"
-              value={cost}
-              onChange={(e) => setCost(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               required
             />
           </div>

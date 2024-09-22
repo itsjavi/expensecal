@@ -40,7 +40,7 @@ export async function updateTransaction(formData: FormData) {
   const id = formData.get('id') as string
   const title = formData.get('title') as string
   const category = formData.get('category') as string
-  const amount = parseInt(formData.get('cost') as string, 10)
+  const amount = parseInt(formData.get('amount') as string, 10)
   const monthlyDay = parseInt(formData.get('dayOfMonth') as string, 10)
   const recurringType = formData.get('recurringType') as 'weekly' | 'fortnightly' | 'monthly' | 'yearly' | 'custom'
   const monthlyCustomRecurringMonths =

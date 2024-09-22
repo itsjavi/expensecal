@@ -30,19 +30,19 @@ type EditExpenseDialogProps = {
 
 export default function EditExpenseDialog({ subscription, open, onOpenChange }: EditExpenseDialogProps) {
   const [title, setTitle] = useState(subscription.title)
-  const [cost, setCost] = useState((subscription.amount / 100).toFixed(2))
+  const [amount, setAmount] = useState((subscription.amount / 100).toFixed(2))
   const [dayOfMonth, setDayOfMonth] = useState(subscription.monthlyDay.toString())
   const [recurringType, setRecurringType] = useState(subscription.recurringType)
   const [category, setCategory] = useState(subscription.category)
   const [customRecurringMonths, setCustomRecurringMonths] = useState(
-    subscription.monthlyCustomRecurringMonths?.toString() || '',
+    subscription.monthlyCustomRecurringMonths?.toString() || '0',
   )
   const [startingMonth, setStartingMonth] = useState(subscription.startingMonth.toString())
   const [logo, setLogo] = useState(subscription.logo || '')
 
   useEffect(() => {
     setTitle(subscription.title)
-    setCost((subscription.amount / 100).toFixed(2))
+    setAmount((subscription.amount / 100).toFixed(2))
     setDayOfMonth(subscription.monthlyDay.toString())
     setRecurringType(subscription.recurringType)
     setCategory(subscription.category)
@@ -56,7 +56,7 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
     const formData = new FormData()
     formData.append('id', subscription.id.toString())
     formData.append('title', title)
-    formData.append('cost', (parseCurrency(cost) * 100).toString()) // Convert to cents
+    formData.append('amount', (parseCurrency(amount) * 100).toString()) // Convert to cents
     formData.append('category', category)
     formData.append('dayOfMonth', dayOfMonth)
     formData.append('recurringType', recurringType)
@@ -114,14 +114,14 @@ export default function EditExpenseDialog({ subscription, open, onOpenChange }: 
             </Select>
           </div>
           <div>
-            <Label htmlFor="cost">Amount</Label>
+            <Label htmlFor="amount">Amount</Label>
             <Input
-              id="cost"
+              id="amount"
               type="number"
               step="0.01"
               min="0"
-              value={cost}
-              onChange={(e) => setCost(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               required
             />
           </div>

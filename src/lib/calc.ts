@@ -108,27 +108,27 @@ export const calculateCategorySums = (subscriptions: Transaction[], _year: numbe
       categorySums[category] = 0
     }
 
-    let annualCost = 0
+    let annualAmount = 0
     switch (sub.recurringType) {
       case 'weekly':
-        annualCost = sub.amount * 52
+        annualAmount = sub.amount * 52
         break
       case 'fortnightly':
-        annualCost = sub.amount * 26
+        annualAmount = sub.amount * 26
         break
       case 'monthly':
-        annualCost = sub.amount * 12
+        annualAmount = sub.amount * 12
         break
       case 'yearly':
-        annualCost = sub.amount
+        annualAmount = sub.amount
         break
       case 'custom':
         const monthsPerYear = 12 / (sub.monthlyCustomRecurringMonths || 12)
-        annualCost = sub.amount * monthsPerYear
+        annualAmount = sub.amount * monthsPerYear
         break
     }
 
-    categorySums[category] += annualCost
+    categorySums[category] += annualAmount
   })
 
   return Object.entries(categorySums).map(([name, value]) => ({ name, value }))

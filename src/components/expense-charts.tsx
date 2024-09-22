@@ -18,7 +18,7 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
   const [activeTab, setActiveTab] = useState('pie')
   const currentYear = new Date().getFullYear()
 
-  const totalYearlyCost = calculateYearlyTotal(subscriptions, currentYear)
+  const totalYearlyAmount = calculateYearlyTotal(subscriptions, currentYear)
 
   const pieChartData = calculateCategorySums(subscriptions, currentYear)
 
@@ -88,7 +88,7 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
               </TabsContent>
             </Tabs>
             <p className="mt-4 text-center font-medium">
-              Total Yearly Expenses: {formatCurrency(totalYearlyCost, currency)}
+              Total Yearly Expenses: {formatCurrency(totalYearlyAmount, currency)}
             </p>
           </>
         )}
