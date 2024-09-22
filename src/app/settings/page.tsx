@@ -25,6 +25,8 @@ export default async function SettingsPage() {
         initialCurrency={user.currency ?? 'USD'}
         initialMonthlyIncome={user.monthlyIncome ?? 0}
         initialMonthlyBudget={user.monthlyBudget ?? 0}
+        initialSavingsGoal={user.savingsGoal ?? 0}
+        initialInitialSavings={user.initialSavings ?? 0}
       />
     </div>
   )

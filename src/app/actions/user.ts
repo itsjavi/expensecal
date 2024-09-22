@@ -10,10 +10,14 @@ export async function updateUserSettings({
   currency,
   monthlyIncome,
   monthlyBudget,
+  savingsGoal,
+  initialSavings,
 }: {
   currency: string
   monthlyIncome: number
   monthlyBudget: number
+  savingsGoal: number
+  initialSavings: number
 }) {
   const session = await assureSessionWithUser()
 
@@ -21,8 +25,10 @@ export async function updateUserSettings({
     .update(users)
     .set({
       currency,
-      monthlyIncome: Math.round(monthlyIncome), // Ensure we're storing integers
-      monthlyBudget: Math.round(monthlyBudget), // Ensure we're storing integers
+      monthlyIncome: Math.round(monthlyIncome),
+      monthlyBudget: Math.round(monthlyBudget),
+      savingsGoal: Math.round(savingsGoal),
+      initialSavings: Math.round(initialSavings),
     })
     .where(eq(users.id, session.user.id))
   revalidatePath('/settings')

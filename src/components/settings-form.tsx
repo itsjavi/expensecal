@@ -26,10 +26,14 @@ export default function SettingsForm({
   initialCurrency,
   initialMonthlyIncome,
   initialMonthlyBudget,
+  initialSavingsGoal,
+  initialInitialSavings,
 }: {
   initialCurrency: string
   initialMonthlyIncome?: number
   initialMonthlyBudget?: number
+  initialSavingsGoal?: number
+  initialInitialSavings?: number
 }) {
   const [currency, setCurrency] = useState(initialCurrency)
   const [monthlyIncome, setMonthlyIncome] = useState(
@@ -37,6 +41,10 @@ export default function SettingsForm({
   )
   const [monthlyBudget, setMonthlyBudget] = useState(
     initialMonthlyBudget ? (initialMonthlyBudget / 100).toFixed(2) : '0.00',
+  )
+  const [savingsGoal, setSavingsGoal] = useState(initialSavingsGoal ? (initialSavingsGoal / 100).toFixed(2) : '0.00')
+  const [initialSavings, setInitialSavings] = useState(
+    initialInitialSavings ? (initialInitialSavings / 100).toFixed(2) : '0.00',
   )
   const router = useRouter()
   const { toast } = useToast()
@@ -48,6 +56,8 @@ export default function SettingsForm({
         currency,
         monthlyIncome: parseCurrency(monthlyIncome) * 100, // Convert to cents
         monthlyBudget: parseCurrency(monthlyBudget) * 100, // Convert to cents
+        savingsGoal: parseCurrency(savingsGoal) * 100, // Convert to cents
+        initialSavings: parseCurrency(initialSavings) * 100, // Convert to cents
       })
       toast({
         title: 'Settings updated',
@@ -94,7 +104,7 @@ export default function SettingsForm({
               </Select>
             </div>
             <div>
-              <Label htmlFor="monthlyIncome">Monthly Income</Label>
+              <Label htmlFor="monthlyIncome">Monthly Income ({currency})</Label>
               <Input
                 id="monthlyIncome"
                 type="number"
@@ -105,7 +115,7 @@ export default function SettingsForm({
               />
             </div>
             <div>
-              <Label htmlFor="monthlyBudget">Monthly Budget</Label>
+              <Label htmlFor="monthlyBudget">Monthly Budget ({currency})</Label>
               <Input
                 id="monthlyBudget"
                 type="number"
@@ -113,6 +123,28 @@ export default function SettingsForm({
                 min="0"
                 value={monthlyBudget}
                 onChange={(e) => setMonthlyBudget(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="initialSavings">Initial Savings ({currency})</Label>
+              <Input
+                id="initialSavings"
+                type="number"
+                step="0.01"
+                min="0"
+                value={initialSavings}
+                onChange={(e) => setInitialSavings(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="savingsGoal">Savings Goals ({currency})</Label>
+              <Input
+                id="savingsGoal"
+                type="number"
+                step="0.01"
+                min="0"
+                value={savingsGoal}
+                onChange={(e) => setSavingsGoal(e.target.value)}
               />
             </div>
           </form>

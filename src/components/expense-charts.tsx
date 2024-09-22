@@ -26,34 +26,37 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
     const expenses = calculateMonthlyTotal(subscriptions, index, currentYear)
     return {
       name: new Date(currentYear, index).toLocaleString('default', { month: 'short' }),
-      Expenses: expenses,
-      Earnings: monthlyIncome,
-      Savings: Math.max(0, monthlyIncome - expenses),
+      Expenses: expenses / 100,
+      Earnings: monthlyIncome / 100,
+      Savings: Math.max(0, monthlyIncome - expenses) / 100,
     }
   })
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
   const renderPieChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={450}>
       <PieChart>
-        <Pie data={pieChartData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value">
+        <Pie data={pieChartData} cx="50%" cy="50%" labelLine={false} outerRadius={150} fill="#8884d8" dataKey="value">
           {pieChartData.map((_entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <Tooltip formatter={(value) => formatCurrency(value as number, currency)} />
-        <Legend />
+        <Legend verticalAlign="bottom" height={36} />
       </PieChart>
     </ResponsiveContainer>
   )
 
   const renderBarChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={450}>
       <BarChart data={barChartData}>
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip formatter={(value) => formatCurrency(value as number, currency)} cursor={{ fill: '#99999977' }} />
+        <Tooltip
+          formatter={(value) => formatCurrency((value as number) * 100, currency)}
+          cursor={{ fill: '#99999977' }}
+        />
         <Legend />
         <Bar dataKey="Expenses" stackId="a" fill="#8884d8" />
         <Bar dataKey="Savings" stackId="a" fill="#82ca9d" />
@@ -64,8 +67,8 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Expense Charts</CardTitle>
-        <CardDescription>Visualize your expenses and earnings</CardDescription>
+        <CardTitle>Expense Insights</CardTitle>
+        <CardDescription>Your expenses and savings, visualized by category and month.</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
         {subscriptions.length === 0 ? (
@@ -74,10 +77,10 @@ export default function ExpenseCharts({ subscriptions = [], currency, monthlyInc
           <>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="pie">Pie Chart</TabsTrigger>
-                <TabsTrigger value="bar">Bar Chart</TabsTrigger>
+                <TabsTrigger value="pie">By Category</TabsTrigger>
+                <TabsTrigger value="bar">By Month</TabsTrigger>
               </TabsList>
-              <TabsContent value="pie" className="flex-grow">
+              <TabsContent value="pie" className="flex-grow flex items-center justify-center">
                 {renderPieChart()}
               </TabsContent>
               <TabsContent value="bar" className="flex-grow">

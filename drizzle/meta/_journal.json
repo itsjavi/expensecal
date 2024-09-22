@@ -64,6 +64,13 @@
       "when": 1726942199876,
       "tag": "0008_early_nocturne",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1727018351790,
+      "tag": "0009_loving_the_captain",
+      "breakpoints": true
     }
   ]
 }

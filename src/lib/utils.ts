@@ -33,6 +33,9 @@ export function singleton<Value>(name: string, valueFactory: () => Value): Value
 }
 
 export function formatCurrency(amount: number, currency: string): string {
+  if (!currency) {
+    throw new Error('Currency is required and cannot be empty')
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,

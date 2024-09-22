@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useSelectedDate } from '@/contexts/selected-date-context'
 import {
   calculateDailyExpense,
   calculateMonthlyTotal,
@@ -14,7 +15,7 @@ import {
 } from '@/lib/calc'
 import { cn, formatCurrency } from '@/lib/utils'
 import { type Transaction } from '@/models/schema'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { DownloadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -40,11 +41,12 @@ function ExportButton({ href, label }: { href: string; label: string }) {
 }
 
 export default function ExpenseCalendar({ subscriptions = [], currency }: ExpenseCalendarProps) {
+  const { selectedDate, setSelectedDate } = useSelectedDate()
   const allCategory = 'All Categories'
   const [isMonthlyView, setIsMonthlyView] = useState(true)
-  const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedCategory, setSelectedCategory] = useState(allCategory)
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const [slideDirection, setSlideDirection] = useState(0)
   const today = new Date()
   const minYear = today.getFullYear() - 1
 
@@ -76,13 +78,13 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
   const filteredSubscriptions =
     selectedCategory === allCategory ? subscriptions : subscriptions.filter((sub) => sub.category === selectedCategory)
 
-  const totalYearlySum = calculateYearlyTotal(filteredSubscriptions, currentDate.getFullYear())
+  const totalYearlySum = calculateYearlyTotal(filteredSubscriptions, selectedDate.getFullYear())
 
   const isPreviousDisabled = () => {
     if (isMonthlyView) {
-      return currentDate.getFullYear() === minYear && currentDate.getMonth() === 0
+      return selectedDate.getFullYear() === minYear && selectedDate.getMonth() === 0
     } else {
-      return currentDate.getFullYear() === minYear
+      return selectedDate.getFullYear() === minYear
     }
   }
 
@@ -101,68 +103,60 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
     }),
   }
 
-  const [slideDirection, setSlideDirection] = useState(0)
-
   const handlePreviousMonth = () => {
     setSlideDirection(-1)
-    setCurrentDate((prevDate) => {
-      const newDate = new Date(prevDate)
-      newDate.setMonth(newDate.getMonth() - 1)
-      if (newDate.getFullYear() < minYear) {
-        newDate.setFullYear(minYear)
-        newDate.setMonth(0)
-      }
-      return newDate
-    })
+    const newDate = new Date(selectedDate)
+    newDate.setMonth(newDate.getMonth() - 1)
+    if (newDate.getFullYear() < minYear) {
+      newDate.setFullYear(minYear)
+      newDate.setMonth(0)
+    }
+    setSelectedDate(newDate)
   }
 
   const handleNextMonth = () => {
     setSlideDirection(1)
-    setCurrentDate((prevDate) => {
-      const newDate = new Date(prevDate)
-      newDate.setMonth(newDate.getMonth() + 1)
-      return newDate
-    })
+    const newDate = new Date(selectedDate)
+    newDate.setMonth(newDate.getMonth() + 1)
+    setSelectedDate(newDate)
   }
 
   const handlePreviousYear = () => {
     setSlideDirection(-1)
-    setCurrentDate((prevDate) => {
-      const newDate = new Date(prevDate)
-      const newYear = Math.max(newDate.getFullYear() - 1, minYear)
-      newDate.setFullYear(newYear)
-      return newDate
-    })
+    const newDate = new Date(selectedDate)
+    const newYear = Math.max(newDate.getFullYear() - 1, minYear)
+    newDate.setFullYear(newYear)
+    setSelectedDate(newDate)
   }
 
   const handleNextYear = () => {
     setSlideDirection(1)
-    setCurrentDate((prevDate) => {
-      const newDate = new Date(prevDate)
-      newDate.setFullYear(newDate.getFullYear() + 1)
-      return newDate
-    })
+    const newDate = new Date(selectedDate)
+    newDate.setFullYear(newDate.getFullYear() + 1)
+    setSelectedDate(newDate)
   }
 
   const handleMonthClick = (monthIndex: number) => {
-    setCurrentDate((prevDate) => {
-      const newDate = new Date(prevDate)
-      newDate.setMonth(monthIndex)
-      return newDate
-    })
+    const newDate = new Date(selectedDate)
+    newDate.setMonth(monthIndex)
+    setSelectedDate(newDate)
     setIsMonthlyView(true)
   }
 
   const renderMonthlyView = () => {
-    const daysInMonth = getDaysCountInMonth(currentDate.getFullYear(), currentDate.getMonth())
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
+    const daysInMonth = getDaysCountInMonth(selectedDate.getFullYear(), selectedDate.getMonth())
+    const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).getDay()
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
-    const monthlyTotal = calculateMonthlyTotal(filteredSubscriptions, currentDate.getMonth(), currentDate.getFullYear())
+    const monthlyTotal = calculateMonthlyTotal(
+      filteredSubscriptions,
+      selectedDate.getMonth(),
+      selectedDate.getFullYear(),
+    )
 
     return (
       <AnimatePresence mode="wait" custom={slideDirection}>
         <motion.div
-          key={currentDate.toISOString()}
+          key={selectedDate.toISOString()}
           custom={slideDirection}
           variants={slideVariants}
           initial="enter"
@@ -182,16 +176,16 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
               <div key={`empty-${index}`}></div>
             ))}
             {days.map((day) => {
-              const isToday = currentDate.getMonth() === today.getMonth() && day === today.getDate()
+              const isToday = selectedDate.getMonth() === today.getMonth() && day === today.getDate()
               const daySubscriptions = getDaySubscriptions(
                 filteredSubscriptions,
                 day,
-                currentDate.getMonth(),
-                currentDate.getFullYear(),
+                selectedDate.getMonth(),
+                selectedDate.getFullYear(),
               )
               const hasSubscriptions = daySubscriptions.length > 0
               const dayTotal = hasSubscriptions
-                ? calculateDailyExpense(daySubscriptions, day, currentDate.getMonth(), currentDate.getFullYear())
+                ? calculateDailyExpense(daySubscriptions, day, selectedDate.getMonth(), selectedDate.getFullYear())
                 : 0
               const hasSubscriptionsAndExpenses = hasSubscriptions
               const cellClasses = cn(
@@ -269,14 +263,14 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           {selectedDay ? (
             <div className="mt-6">
               <h4 className="text-lg font-semibold mb-2">
-                Expenses for {months[currentDate.getMonth()]} {selectedDay}, {currentDate.getFullYear()}
+                Expenses for {months[selectedDate.getMonth()]} {selectedDay}, {selectedDate.getFullYear()}
               </h4>
               <ScrollArea className="mt-4">
                 {getDaySubscriptions(
                   filteredSubscriptions,
                   selectedDay,
-                  currentDate.getMonth(),
-                  currentDate.getFullYear(),
+                  selectedDate.getMonth(),
+                  selectedDate.getFullYear(),
                 ).length === 0 ? (
                   <p>No expenses for this day.</p>
                 ) : (
@@ -284,8 +278,8 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
                     {getDaySubscriptions(
                       filteredSubscriptions,
                       selectedDay,
-                      currentDate.getMonth(),
-                      currentDate.getFullYear(),
+                      selectedDate.getMonth(),
+                      selectedDate.getFullYear(),
                     ).map((sub) => (
                       <li key={sub.id} className="flex items-center justify-between border-b pb-2">
                         <div>
@@ -321,7 +315,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
     return (
       <AnimatePresence mode="wait" custom={slideDirection}>
         <motion.div
-          key={currentDate.getFullYear()}
+          key={selectedDate.getFullYear()}
           custom={slideDirection}
           variants={slideVariants}
           initial="enter"
@@ -331,8 +325,8 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
         >
           <div className="grid grid-cols-3 gap-4">
             {months.map((month, index) => {
-              const isCurrentMonth = index === today.getMonth() && currentDate.getFullYear() === today.getFullYear()
-              const monthlyTotal = calculateMonthlyTotal(filteredSubscriptions, index, currentDate.getFullYear())
+              const isCurrentMonth = index === today.getMonth() && selectedDate.getFullYear() === today.getFullYear()
+              const monthlyTotal = calculateMonthlyTotal(filteredSubscriptions, index, selectedDate.getFullYear())
               const monthSubscriptions = getExpensesForMonth(filteredSubscriptions, index)
               const cellClasses = cn(
                 'border p-2 rounded-md flex flex-col justify-between h-full gap-1 items-center md:items-start text-left',
@@ -379,10 +373,10 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
           <div className="col-span-1 text-center">
             <div className="text-base md:text-lg font-medium">
               <span className="hidden md:inline">
-                {months[currentDate.getMonth()]} {currentDate.getFullYear()}
+                {months[selectedDate.getMonth()]} {selectedDate.getFullYear()}
               </span>
               <span className="inline md:hidden">
-                {monthsShort[currentDate.getMonth()]} {currentDate.getFullYear()}
+                {monthsShort[selectedDate.getMonth()]} {selectedDate.getFullYear()}
               </span>
             </div>
           </div>
@@ -400,7 +394,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
             </Button>
           </div>
           <div className="col-span-1 text-center">
-            <div className="text-lg font-medium">{currentDate.getFullYear()}</div>
+            <div className="text-lg font-medium">{selectedDate.getFullYear()}</div>
           </div>
           <div className="col-span-1 text-right">
             <Button variant="outline" onClick={handleNextYear}>
@@ -454,7 +448,7 @@ export default function ExpenseCalendar({ subscriptions = [], currency }: Expens
       </CardContent>
       <CardFooter>
         <ExportButton
-          href={`/api/export/${isMonthlyView ? 'monthly' : 'yearly'}?year=${currentDate.getFullYear()}${isMonthlyView ? `&month=${currentDate.getMonth()}` : ''}`}
+          href={`/api/export/${isMonthlyView ? 'monthly' : 'yearly'}?year=${selectedDate.getFullYear()}${isMonthlyView ? `&month=${selectedDate.getMonth()}` : ''}`}
           label={`Export Expenses for the current ${isMonthlyView ? 'Month' : 'Year'}`}
         />
       </CardFooter>

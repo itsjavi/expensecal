@@ -12,6 +12,8 @@ export const users = pgTable('user', {
   currency: text('currency').default('USD'),
   monthlyIncome: integer('monthlyIncome').default(0).notNull(),
   monthlyBudget: integer('monthlyBudget').default(0).notNull(),
+  savingsGoal: integer('savingsGoal').default(0).notNull(),
+  initialSavings: integer('initialSavings').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })

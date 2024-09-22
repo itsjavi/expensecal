@@ -18,6 +18,7 @@ Technically, it follows these rules:
 - Use Client Components if hooks or user interactions are needed. Remember to add the "use client" directive at the top
   of the file.
 - next-themes for the theme management
+- Avoid dynamic imports as long as it is possible.
 - Use kebab-case for the file names instead of CamelCase.
 - Use signle-quoted strings, and templates instead of concatenation.
 
