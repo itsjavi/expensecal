@@ -1,55 +1,39 @@
-import { accounts, authenticators, sessions, users, verificationTokens } from '@/models/schema'
+import { accounts, authenticators, sessions, users, verificationTokens, type UserRecord } from '@/models/schema'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import { db } from './db'
 
+type SessionUserDTO = DefaultSession['user'] & {
+  id: string
+  name?: string | null
+  email?: string | null
+  image?: string | null
+  currency: string | null
+  // ... other user properties
+}
+
 declare module 'next-auth' {
   interface Session {
-    user: DefaultSession['user'] & {
-      id: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-      currency: string
-      // ... other user properties
-    }
-  }
-
-  interface User {
-    currency: string
-    // ... other user properties
+    user: SessionUserDTO
   }
 }
 
-// export const authOptions: NextAuthOptions = {
-//   session: {
-//     strategy: "jwt",
-//   },
-//   providers: [
-//     GithubProvider({
-//       clientId: envVars.GITHUB_OAUTH_CLIENT_ID,
-//       clientSecret: envVars.GITHUB_OAUTH_CLIENT_SECRET,
-//     }),
-//   ],
-//   callbacks: {
-//     async session({ session, token }) {
-//       if (session.user) {
-//         session.user.id = token.sub as string;
-//       }
-//       return session;
-//     },
-//   },
-//   pages: {
-//     signIn: '/auth/signin',
-//   },
-//   // Configure custom base URL for development
-//   ...(isDevelopmentEnv()
-//     ? {
-//       url: envVars.NEXTAUTH_URL || `http://localhost:${process.env['PORT'] || 5091}`,
-//     }
-//     : {}),
-// }
+declare module 'next-auth/adapters' {
+  interface AdapterSession {
+    user: SessionUserDTO
+  }
+
+  interface AdapterUser extends UserRecord {}
+}
+
+declare module '@auth/core/adapters' {
+  interface AdapterSession {
+    user: SessionUserDTO
+  }
+
+  interface AdapterUser extends UserRecord {}
+}
 
 export const providers = [
   {

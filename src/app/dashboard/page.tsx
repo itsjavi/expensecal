@@ -33,6 +33,7 @@ export default async function Dashboard() {
   }
 
   const hasSubscriptions = subscriptions.length > 0
+  const currency = session.user.currency ?? 'USD'
 
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col gap-4 md:gap-8">
@@ -42,7 +43,7 @@ export default async function Dashboard() {
         {hasSubscriptions && (
           <DashboardMetrics
             subscriptions={subscriptions}
-            currency={session.user.currency}
+            currency={currency}
             monthlyIncome={user.monthlyIncome ?? 0}
             monthlyBudget={user.monthlyBudget ?? 0}
             savingsGoal={user.savingsGoal ?? 0}
@@ -50,18 +51,14 @@ export default async function Dashboard() {
           />
         )}
         <div className="grid grid-cols-1 gap-8">
-          <ExpenseCalendar subscriptions={subscriptions} currency={session.user.currency} />
+          <ExpenseCalendar subscriptions={subscriptions} currency={currency} />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 min-h-[300px]">
           <div className="lg:col-span-2">
-            <ExpenseList subscriptions={subscriptions} currency={session.user.currency} />
+            <ExpenseList subscriptions={subscriptions} currency={currency} />
           </div>
           <div className="lg:col-span-2">
-            <ExpenseCharts
-              subscriptions={subscriptions}
-              currency={session.user.currency}
-              monthlyIncome={user.monthlyIncome ?? 0}
-            />
+            <ExpenseCharts subscriptions={subscriptions} currency={currency} monthlyIncome={user.monthlyIncome ?? 0} />
           </div>
         </div>
       </SelectedDateProvider>

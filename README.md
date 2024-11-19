@@ -1,21 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with
-[`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# expensecal
+
+Expense tracking app built with Drizzle and Next.js. The app provides many tools to help you track, analyze, and
+optimize your expenses with ease, visualize them in a calendar, and help you save money.
+
+![screenshot](./screenshot.png)
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies, start the database, and run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+docker compose up -d
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:5091](http://localhost:5091) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -23,6 +23,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with
+[`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 To learn more about Next.js, take a look at the following resources:
 

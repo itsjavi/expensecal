@@ -18,6 +18,8 @@ export const users = pgTable('user', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
+export type UserRecord = typeof users.$inferSelect
+
 export const accounts = pgTable(
   'auth_account',
   {
