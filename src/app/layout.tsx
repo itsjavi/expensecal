@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { Analytics } from '@vercel/analytics/react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -18,6 +19,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          // plausible analytics
+          defer
+          data-domain="expensecal.com"
+          data-api="https://plaw.itsjavi.com/api/plaw"
+          src="https://plaw.itsjavi.com/js/plaw.tagged-events.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className={inter.className}>
         <Providers session={session}>
           <BaseLayout session={session}>{children}</BaseLayout>
