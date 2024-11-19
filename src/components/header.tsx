@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ChartPieIcon, LogOut, MessageSquareMoreIcon, Settings } from 'lucide-react'
+import { ChartPieIcon, GithubIcon, LogOut, MessageSquareMoreIcon, Settings } from 'lucide-react'
 import type { Session } from 'next-auth'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -37,6 +37,12 @@ export default function Header({ session }: { session: Session | null }) {
               </Button>
             )}
             <ThemeToggle />
+
+            <Button asChild variant="ghost" size="icon" aria-label="Toggle theme">
+              <a href="https://github.com/itsjavi/expensecal" target="_blank" rel="noopener noreferrer">
+                <GithubIcon className="h-5 w-5" />
+              </a>
+            </Button>
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
