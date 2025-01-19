@@ -21,11 +21,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script
-          // plausible analytics
+          // Umami analytics
           defer
           data-domain="expensecal.com"
-          data-api="https://plaw.itsjavi.com/api/plaw"
-          src="https://plaw.itsjavi.com/js/plaw.tagged-events.js"
+          data-website-id="9c62a028-2171-430b-9619-07c6378c1614"
+          src="https://aw.itsjavi.com/s/uma.js"
           strategy="beforeInteractive"
         />
       </head>
